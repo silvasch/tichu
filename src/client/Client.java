@@ -1,3 +1,7 @@
+package src.client;
+
+import src.card.*;
+
 class Client {
 
     public static void main(String[] args) {

@@ -1,4 +1,6 @@
-class Hound extends Card {
+package src.card;
+
+public class HoundCard extends Card {
 
     @Override
     public String toString() {

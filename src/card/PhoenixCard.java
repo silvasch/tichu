@@ -1,3 +1,5 @@
+package src.card;
+
 public class PhoenixCard extends Card {
 
     @Override

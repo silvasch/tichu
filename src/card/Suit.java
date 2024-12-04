@@ -1,4 +1,6 @@
-enum Suit {
+package src.card;
+
+public enum Suit {
     GREEN,
     BLUE,
     RED,

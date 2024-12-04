@@ -1,4 +1,6 @@
-enum Rank {
+package src.card;
+
+public enum Rank {
     TWO,
     THREE,
     FOUR,

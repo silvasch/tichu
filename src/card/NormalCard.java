@@ -1,4 +1,6 @@
-class NormalCard extends Card {
+package src.card;
+
+public class NormalCard extends Card {
 
     private Suit suit;
     private Rank rank;
