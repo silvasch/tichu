@@ -20,6 +20,6 @@
           }));
     in {
       devShell = eachSystem (pkgs:
-        pkgs.mkShell { packages = with pkgs; [ jdk21 jdt-language-server ]; });
+        pkgs.mkShell { packages = with pkgs; [ jdk21 jdt-language-server python3 ]; });
     };
 }

@@ -1,5 +1,6 @@
 package src.bombs;
 
+import java.util.Arrays;
 import java.util.StringJoiner;
 import src.card.Card;
 
@@ -10,6 +11,7 @@ public class StreetBomb extends Bomb {
     public StreetBomb(Card[] cards) {
         // TODO: verify that this bomb can be created from the arguments
         this.cards = cards;
+        Arrays.sort(this.cards);
     }
 
     public Card[] getCards() {

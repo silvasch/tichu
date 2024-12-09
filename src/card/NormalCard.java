@@ -19,6 +19,16 @@ public class NormalCard extends Card {
     }
 
     @Override
+    public int compareTo(Card other) {
+    	if (other instanceof NormalCard) {
+    	    return Integer.compare(this.rank.ordinal(), ((NormalCard) other).getRank().ordinal());
+    	} else {
+    	    // Special cards are higher
+    	    return -1;
+    	}
+    }
+
+    @Override
     public String toString() {
         return String.format("%s %s", suit, rank);
     }
