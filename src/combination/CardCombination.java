@@ -1,4 +1,4 @@
-package src.card_combination;
+package src.combination;
 
 import src.Move;
 
