@@ -10,6 +10,14 @@ public class NormalCard extends Card {
         this.rank = rank;
     }
 
+    public Suit getSuit() {
+        return this.suit;
+    }
+
+    public Rank getRank() {
+        return this.rank;
+    }
+
     @Override
     public String toString() {
         return String.format("%s %s", suit, rank);
