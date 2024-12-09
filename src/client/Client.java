@@ -1,15 +1,15 @@
 package src.client;
 
+import src.Move;
 import src.card.*;
-import src.combination.StreetCombination;
+import src.player.HumanPlayer;
+import src.player.Player;
 
 class Client {
 
     public static void main(String[] args) {
-        NormalCard cardOne = new NormalCard(Suit.GREEN, Rank.EIGHT);
-        NormalCard cardTwo = new NormalCard(Suit.RED, Rank.NINE);
-        NormalCard cardThree = new NormalCard(Suit.RED, Rank.ACE);
-        StreetCombination street = new StreetCombination(new Card[]{cardOne, cardTwo, cardThree});
-        System.out.println(street);
+        Player player = new Player(new HumanPlayer(), new Card[] { new NormalCard(Suit.GREEN, Rank.KING),
+                new NormalCard(Suit.RED, Rank.KING), new NormalCard(Suit.BLUE, Rank.SEVEN) });
+        System.out.println(player.makeMove(new Move[] {}));
     }
 }

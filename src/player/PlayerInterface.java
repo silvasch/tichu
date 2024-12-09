@@ -1,7 +1,8 @@
 package src.player;
 
 import src.Move;
+import src.card.Card;
 
 interface PlayerInterface {
-    public int makeMove(Move[] previousMoves, Move[] validMoves);
+    public Move makeMove(Move[] previousMoves, Card[] deck);
 }
