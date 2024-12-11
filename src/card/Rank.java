@@ -1,6 +1,7 @@
 package src.card;
 
 public enum Rank {
+    ONE,  // Für Mah Jong
     TWO,
     THREE,
     FOUR,
@@ -17,35 +18,28 @@ public enum Rank {
 
     @Override
     public String toString() {
-        switch (this) {
-            case TWO:
-                return "Two";
-            case THREE:
-                return "Three";
-            case FOUR:
-                return "Four";
-            case FIVE:
-                return "Five";
-            case SIX:
-                return "Six";
-            case SEVEN:
-                return "Seven";
-            case EIGHT:
-                return "Eight";
-            case NINE:
-                return "Nine";
-            case TEN:
-                return "Ten";
-            case JACK:
-                return "Jack";
-            case QUEEN:
-                return "Queen";
-            case KING:
-                return "King";
-            case ACE:
-                return "Ace";
-            default:
-                return "unreachable";
-        }
+        return switch (this) {
+            case ONE -> "Mah Jong";
+            case TWO -> "Two";
+            case THREE -> "Three";
+            case FOUR -> "Four";
+            case FIVE -> "Five";
+            case SIX -> "Six";
+            case SEVEN -> "Seven";
+            case EIGHT -> "Eight";
+            case NINE -> "Nine";
+            case TEN -> "Ten";
+            case JACK -> "Jack";
+            case QUEEN -> "Queen";
+            case KING -> "King";
+            case ACE -> "Ace";
+        };
+    }
+    public int toHeight() {  // für Grössenvergleiche
+        return this.ordinal() + 1;
+    }
+
+    public static Rank heightToRank(int height) {
+        return Rank.values()[height - 1];
     }
 }

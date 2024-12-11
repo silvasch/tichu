@@ -13,6 +13,7 @@ public class SingleCombination extends CardCombination {
     public Card getCard() {
         return this.card;
     }
+    // TODO getRank() for SingleCombination
 
     @Override
     public String toString() {

@@ -1,5 +1,7 @@
 package src.combination;
 
+import src.card.Rank;
+
 public class FullHouseCombination extends CardCombination {
 
     private DoubleCombination pair;
@@ -20,6 +22,11 @@ public class FullHouseCombination extends CardCombination {
 
     public TripleCombination getTriple() {
         return this.triple;
+    }
+
+
+    public Rank getRank() {
+        return this.triple.getRank();
     }
 
     @Override
