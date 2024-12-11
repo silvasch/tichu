@@ -13,6 +13,7 @@ public class TripleCombination extends CardCombination {
         // TODO: verify that this combination can be created from the arguments
         this.cardOne = cardOne;
         this.cardTwo = cardTwo;
+        this.cardThree = cardThree;
     }
 
     public Card getCardOne() {

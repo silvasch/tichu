@@ -1,18 +1,18 @@
 package src.player;
 
-import src.Deck;
 import src.Move;
+import src.card.Card;
 
 public class Player {
     private PlayerInterface playerInterface;
-    private Deck deck;
+    private Card[] deck;
 
-    public Player(PlayerInterface playerInterface, Deck deck) {
+    public Player(PlayerInterface playerInterface, Card[] deck) {
         this.playerInterface = playerInterface;
         this.deck = deck;
     }
 
-    public Move[] generateValidMoves() {
-        return new Move[0];
+    public Move makeMove(Move[] previousMoves) {
+        return this.playerInterface.makeMove(previousMoves, this.deck);
     }
 }
