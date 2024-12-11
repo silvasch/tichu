@@ -4,9 +4,13 @@ import java.util.Arrays;
 import java.util.Scanner;
 
 import src.Move;
+import src.bombs.QuadrupleBomb;
 import src.card.Card;
+import src.card.NormalCard;
+import src.card.Rank;
 import src.combination.DoubleCombination;
 import src.combination.SingleCombination;
+import src.combination.TripleCombination;
 
 public class HumanPlayer implements PlayerInterface {
     public Move makeMove(Move[] previousMoves, Card[] deck) {
@@ -62,6 +66,25 @@ public class HumanPlayer implements PlayerInterface {
             return new SingleCombination(cards[0]);
         } else if (cards.length == 2) {
             return new DoubleCombination(cards[0], cards[1]);
+        } else if (cards.length == 3) {
+            return new TripleCombination(cards[0], cards[1], cards[2]);
+        } else if (cards.length == 4) {
+            if (cards[0] instanceof NormalCard normalCardOne && cards[1] instanceof NormalCard normalCardTwo
+                    && cards[2] instanceof NormalCard normalCardThree
+                    && cards[3] instanceof NormalCard normalCardFour) {
+                Rank expectedRank = normalCardOne.getRank();
+
+                if (normalCardTwo.getRank() == expectedRank && normalCardThree.getRank() == expectedRank
+                        && normalCardFour.getRank() == expectedRank) {
+                    return new QuadrupleBomb(normalCardOne, normalCardTwo, normalCardThree, normalCardFour);
+                }
+            }
+
+            // TODO: make stair
+            return new Move();
+        } else if (cards.length == 5) {
+            // TODO: handle streets, full houses and street bombs
+            return new Move();
         } else {
             throw new Exception("Failed to create a move from the given cards.");
         }
