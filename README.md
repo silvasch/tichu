@@ -1,7 +1,7 @@
 # Tichu
 
 An implementation of the game [Tichu](https://en.wikipedia.org/wiki/Tichu).
-It uses sockets to connect multiple clients to play together.
+The Implementation uses extensive object oriented programming. It uses sockets to connect multiple clients to play together. This allows us to reinforce our understanding about classes and learn using sockets to connect online. 
 
 ## Running
 
