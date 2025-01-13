@@ -1,8 +1,8 @@
 package src.card;
 
-public class Card implements Comparable<Card> {
+public abstract class Card implements Comparable<Card> {
 
-    public int compareTo(Card other) {
-        return 0;
-    }
+    public abstract int compareTo(Card other);
+
+    public abstract String toString();
 }

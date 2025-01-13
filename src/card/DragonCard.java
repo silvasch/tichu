@@ -12,7 +12,8 @@ public class DragonCard extends Card {
     	}
     }
 
-    public String getName() {
+    @Override
+    public String toString() {
         return "Dragon";
     }
 }
