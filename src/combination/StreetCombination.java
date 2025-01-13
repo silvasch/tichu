@@ -1,5 +1,6 @@
 package src.combination;
 
+import java.util.Arrays;
 import java.util.StringJoiner;
 
 import src.card.*;
@@ -9,7 +10,7 @@ public class StreetCombination extends CardCombination {
     private Card[] cards;
 
     public StreetCombination(Card[] cards) throws Exception{
-        // TODO: Sortieren aller Karten vor der Initialisierung bei allen Methoden (wird angenommen)
+        Arrays.sort(cards);
         this.cards = cards;
         int thisCardHeight = this.getRank().toHeight();
         for (Card card : cards) {
@@ -18,9 +19,7 @@ public class StreetCombination extends CardCombination {
                     throw new Exception("invalid StreetCombination");
                 }
             }
-            else if (!(card instanceof PhoenixCard || card instanceof MahJongCard)) {
-                // MahJong is sorted first and therefore defines the height. It cannot invalidate a street.
-                // Phoenix can't for obvious reasons.
+            else {
                 throw new Exception("invalid StreetCombination");
             }
             thisCardHeight++;
@@ -33,15 +32,7 @@ public class StreetCombination extends CardCombination {
 
 
     public Rank getRank() {
-        if (this.cards[0] instanceof NormalCard normalCardZero) {
-            return normalCardZero.getRank();
-        }
-        if (this.cards[0] instanceof MahJongCard) {
-            return Rank.ONE;
-        }
-        NormalCard normalCardOne =  (NormalCard) cards[1];  // nur ein Phönix, die Eins ist bereits aussortiert
-        return Rank.heightToRank(normalCardOne.getRank().toHeight() - 1);
-
+        return this.cards[0].getRank();
     }
 
     @Override

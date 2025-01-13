@@ -1,7 +1,6 @@
 package src.card;
 
 public enum Rank {
-    ONE,  // Für Mah Jong
     TWO,
     THREE,
     FOUR,
@@ -19,7 +18,6 @@ public enum Rank {
     @Override
     public String toString() {
         return switch (this) {
-            case ONE -> "Mah Jong";
             case TWO -> "Two";
             case THREE -> "Three";
             case FOUR -> "Four";

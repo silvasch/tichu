@@ -2,7 +2,6 @@ package src.combination;
 
 import src.card.Card;
 import src.card.NormalCard;
-import src.card.PhoenixCard;
 import src.card.Rank;
 
 public class DoubleCombination extends CardCombination{
