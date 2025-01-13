@@ -1,6 +1,7 @@
 package src.combination;
 
 import src.card.Card;
+import src.card.Rank;
 
 public class SingleCombination extends CardCombination {
 
@@ -13,7 +14,10 @@ public class SingleCombination extends CardCombination {
     public Card getCard() {
         return this.card;
     }
-    // TODO getRank() for SingleCombination
+
+    public Rank getRank() {
+        return this.card.getRank();
+    }
 
     @Override
     public String toString() {
