@@ -9,6 +9,8 @@ public class PairCombination extends Move {
     private Card cardTwo;
 
     public PairCombination(Card cardOne, Card cardTwo) throws InvalidCombinationException {
+        // because this project only supports normal cards, this does not require any
+        // further logic.
         if (cardOne instanceof NormalCard normalCardOne && cardTwo instanceof NormalCard normalCardTwo) {
             if (normalCardOne.getRank() != normalCardTwo.getRank()) {
                 throw new InvalidCombinationException("to form a pair, the two cards have to be of equal rank.");
