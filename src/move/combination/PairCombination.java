@@ -30,4 +30,13 @@ public class PairCombination extends Move implements Comparable<PairCombination>
     public String toString() {
         return String.format("Pair: %s - %s", this.cardOne, this.cardTwo);
     }
+
+    public Card getCardOne() {
+        return this.cardOne;
+    }
+
+    public Card getCardTwo() {
+        return this.cardTwo;
+    }
+
 }

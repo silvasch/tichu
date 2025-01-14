@@ -35,4 +35,16 @@ public class TripleCombination extends Move implements Comparable<TripleCombinat
     public String toString() {
         return String.format("Triple: %s - %s - %s", this.cardOne, this.cardTwo, this.cardThree);
     }
+
+    public Card getCardOne() {
+        return this.cardOne;
+    }
+
+    public Card getCardTwo() {
+        return this.cardTwo;
+    }
+
+    public Card getCardThree() {
+        return this.cardThree;
+    }
 }

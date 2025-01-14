@@ -17,4 +17,8 @@ public class SingleCombination extends Move implements Comparable<SingleCombinat
     public String toString() {
         return String.format("Single: %s", this.card);
     }
+
+    public Card getCard() {
+        return this.card;
+    }
 }
