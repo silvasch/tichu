@@ -43,5 +43,29 @@ public class CombinationTester {
         } catch (InvalidCombinationException e) {
 
         }
+
+        try {
+            new StreetCombination(new Card[] {
+                    new NormalCard(Suit.BLACK, Rank.FOUR),
+                    new NormalCard(Suit.BLACK, Rank.TWO),
+                    new NormalCard(Suit.RED, Rank.THREE),
+                    new NormalCard(Suit.GREEN, Rank.SIX),
+                    new NormalCard(Suit.BLUE, Rank.FIVE),
+            });
+        } catch (InvalidCombinationException e) {
+            throw new RuntimeException(e);
+        }
+
+        try {
+            new StreetCombination(new Card[] {
+                    new NormalCard(Suit.BLACK, Rank.FOUR),
+                    new NormalCard(Suit.BLACK, Rank.TWO),
+                    new NormalCard(Suit.RED, Rank.THREE),
+                    new NormalCard(Suit.GREEN, Rank.SIX),
+                    new NormalCard(Suit.BLUE, Rank.KING),
+            });
+            throw new RuntimeException("this test expects an exception to happen.");
+        } catch (InvalidCombinationException e) {
+        }
     }
 }
