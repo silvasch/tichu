@@ -1,15 +1,11 @@
-package src.move;
+package src.move.combination;
 
 import src.card.Card;
 import src.card.NormalCard;
 import src.card.Rank;
 import src.card.Suit;
-import src.move.combination.TripleCombination;
-import src.move.combination.InvalidCombinationException;
-import src.move.combination.PairCombination;
-import src.move.combination.SingleCombination;
 
-public class MoveTester {
+public class CombinationTester {
 
     public static void main(String[] args) {
         Card cardOne = new NormalCard(Suit.BLACK, Rank.ACE);
@@ -30,7 +26,7 @@ public class MoveTester {
         try {
             PairCombination pairOne = new PairCombination(cardOne, cardFive); // aces
             PairCombination pairTwo = new PairCombination(cardTwo, cardThree); // sevens
-            assert pairOne.compareTo(pairTwo) < 0;
+            assert pairOne.compareTo(pairTwo) > 0;
         } catch (InvalidCombinationException e) {
             throw new RuntimeException(e.getMessage());
         }
