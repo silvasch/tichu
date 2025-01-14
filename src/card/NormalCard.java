@@ -10,6 +10,14 @@ public class NormalCard extends Card {
         this.rank = rank;
     }
 
+    public Suit getSuit() {
+        return this.suit;
+    }
+
+    public Rank getRank() {
+        return this.rank;
+    }
+
     public int compareTo(Card other) {
         if (other instanceof NormalCard normalOther) {
             return this.rank.compareTo(normalOther.rank);
