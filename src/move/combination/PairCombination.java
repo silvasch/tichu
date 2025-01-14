@@ -4,7 +4,7 @@ import src.card.Card;
 import src.card.NormalCard;
 import src.move.Move;
 
-public class PairCombination extends Move {
+public class PairCombination extends Move implements Comparable<PairCombination> {
     private Card cardOne;
     private Card cardTwo;
 
@@ -19,6 +19,12 @@ public class PairCombination extends Move {
 
         this.cardOne = cardOne;
         this.cardTwo = cardTwo;
+    }
+
+    public int compareTo(PairCombination other) {
+        // because cardOne and cardTwo have to be of the same rank, we can just compare
+        // one of them.
+        return this.cardOne.compareTo(other.cardOne);
     }
 
     public String toString() {

@@ -16,20 +16,23 @@ public class MoveTester {
         Card cardTwo = new NormalCard(Suit.GREEN, Rank.SEVEN);
         Card cardThree = new NormalCard(Suit.BLUE, Rank.SEVEN);
         Card cardFour = new NormalCard(Suit.RED, Rank.SEVEN);
+        Card cardFive = new NormalCard(Suit.RED, Rank.ACE);
 
         assert new SingleCombination(cardOne).toString().equals("Single: Black Ace");
-
-        try {
-            new PairCombination(cardTwo, cardThree);
-        } catch (InvalidCombinationException e) {
-            throw new RuntimeException(e.getMessage());
-        }
 
         try {
             new PairCombination(cardOne, cardTwo);
             throw new RuntimeException("this test expects an exception to happen.");
         } catch (InvalidCombinationException e) {
 
+        }
+
+        try {
+            PairCombination pairOne = new PairCombination(cardOne, cardFive); // aces
+            PairCombination pairTwo = new PairCombination(cardTwo, cardThree); // sevens
+            assert pairOne.compareTo(pairTwo) < 0;
+        } catch (InvalidCombinationException e) {
+            throw new RuntimeException(e.getMessage());
         }
 
         try {

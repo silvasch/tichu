@@ -5,7 +5,7 @@ import src.card.NormalCard;
 import src.card.Rank;
 import src.move.Move;
 
-public class TripleCombination extends Move {
+public class TripleCombination extends Move implements Comparable<TripleCombination> {
     private Card cardOne;
     private Card cardTwo;
     private Card cardThree;
@@ -24,6 +24,12 @@ public class TripleCombination extends Move {
         this.cardOne = cardOne;
         this.cardTwo = cardTwo;
         this.cardThree = cardThree;
+    }
+
+    public int compareTo(TripleCombination other) {
+        // because cardOne cardTwo and cardThree have to be of the same rank, we can
+        // just compare one of them.
+        return this.cardOne.compareTo(other.cardOne);
     }
 
     public String toString() {
