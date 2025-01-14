@@ -39,7 +39,6 @@ public class CombinationTester {
                     new NormalCard(Suit.GREEN, Rank.QUEEN));
             throw new RuntimeException("this test expects an exception to happen.");
         } catch (InvalidCombinationException e) {
-
         }
 
         try {
@@ -64,6 +63,26 @@ public class CombinationTester {
             });
             throw new RuntimeException("this test expects an exception to happen.");
         } catch (InvalidCombinationException e) {
+        }
+
+        try {
+            StairCombination stair = new StairCombination(new PairCombination[] {
+                    new PairCombination(new NormalCard(Suit.BLUE, Rank.EIGHT), new NormalCard(Suit.GREEN, Rank.EIGHT)),
+                    new PairCombination(new NormalCard(Suit.BLACK, Rank.SEVEN), new NormalCard(Suit.GREEN, Rank.SEVEN))
+            });
+            assert stair.toString().equals("Stair: Black Seven - Green Seven - Blue Eight - Green Eight");
+        } catch (InvalidCombinationException e) {
+            throw new RuntimeException(e);
+        }
+
+        try {
+            new StairCombination(new PairCombination[] {
+                    new PairCombination(new NormalCard(Suit.BLUE, Rank.EIGHT), new NormalCard(Suit.GREEN, Rank.EIGHT)),
+                    new PairCombination(new NormalCard(Suit.BLACK, Rank.SIX), new NormalCard(Suit.GREEN, Rank.SIX))
+            });
+            throw new RuntimeException("this test expects an exception to happen.");
+        } catch (InvalidCombinationException e) {
+
         }
     }
 }
