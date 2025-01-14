@@ -8,37 +8,35 @@ import src.card.Suit;
 public class CombinationTester {
 
     public static void main(String[] args) {
-        Card cardOne = new NormalCard(Suit.BLACK, Rank.ACE);
-        Card cardTwo = new NormalCard(Suit.GREEN, Rank.SEVEN);
-        Card cardThree = new NormalCard(Suit.BLUE, Rank.SEVEN);
-        Card cardFour = new NormalCard(Suit.RED, Rank.SEVEN);
-        Card cardFive = new NormalCard(Suit.RED, Rank.ACE);
-
-        assert new SingleCombination(cardOne).toString().equals("Single: Black Ace");
+        assert new SingleCombination(new NormalCard(Suit.BLACK, Rank.ACE)).toString().equals("Single: Black Ace");
 
         try {
-            new PairCombination(cardOne, cardTwo);
+            new PairCombination(new NormalCard(Suit.BLACK, Rank.ACE), new NormalCard(Suit.RED, Rank.FIVE));
             throw new RuntimeException("this test expects an exception to happen.");
         } catch (InvalidCombinationException e) {
 
         }
 
         try {
-            PairCombination pairOne = new PairCombination(cardOne, cardFive); // aces
-            PairCombination pairTwo = new PairCombination(cardTwo, cardThree); // sevens
+            PairCombination pairOne = new PairCombination(new NormalCard(Suit.BLACK, Rank.ACE),
+                    new NormalCard(Suit.GREEN, Rank.ACE)); // aces
+            PairCombination pairTwo = new PairCombination(new NormalCard(Suit.RED, Rank.SEVEN),
+                    new NormalCard(Suit.BLUE, Rank.SEVEN)); // aces
             assert pairOne.compareTo(pairTwo) > 0;
         } catch (InvalidCombinationException e) {
-            throw new RuntimeException(e.getMessage());
+            throw new RuntimeException(e);
         }
 
         try {
-            new TripleCombination(cardTwo, cardThree, cardFour);
+            new TripleCombination(new NormalCard(Suit.BLACK, Rank.QUEEN), new NormalCard(Suit.RED, Rank.QUEEN),
+                    new NormalCard(Suit.GREEN, Rank.QUEEN));
         } catch (InvalidCombinationException e) {
-            throw new RuntimeException(e.getMessage());
+            throw new RuntimeException(e);
         }
 
         try {
-            new TripleCombination(cardOne, cardTwo, cardThree);
+            new TripleCombination(new NormalCard(Suit.BLACK, Rank.SEVEN), new NormalCard(Suit.RED, Rank.QUEEN),
+                    new NormalCard(Suit.GREEN, Rank.QUEEN));
             throw new RuntimeException("this test expects an exception to happen.");
         } catch (InvalidCombinationException e) {
 
