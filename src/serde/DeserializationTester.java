@@ -6,6 +6,7 @@ import src.card.Rank;
 import src.card.Suit;
 import src.move.combination.PairCombination;
 import src.move.combination.SingleCombination;
+import src.move.combination.TripleCombination;
 
 public class DeserializationTester {
     public static void main(String[] args) throws Exception {
@@ -14,6 +15,7 @@ public class DeserializationTester {
         DeserializationTester.normalCardDeserializationTest();
         DeserializationTester.singleCombinationDeserializationTest();
         DeserializationTester.pairCombinationDeserializationTest();
+        DeserializationTester.tripleCombinationDeserializationTest();
     }
 
     private static void rankDeserializationTest() throws Exception {
@@ -59,6 +61,28 @@ public class DeserializationTester {
             assert normalCardOne.getRank().equals(Rank.ACE);
             assert normalCardTwo.getSuit().equals(Suit.GREEN);
             assert normalCardTwo.getRank().equals(Rank.ACE);
+        } else {
+            throw new Exception("pair combination did not contain a normal card");
+        }
+        assert de.getRemainder().equals(",asdf");
+    }
+
+    private static void tripleCombinationDeserializationTest() throws Exception {
+        PartialDeserialization<TripleCombination> de = TripleCombination
+                .partialDeserialize(
+                        new TripleCombination(new NormalCard(Suit.BLACK, Rank.ACE),
+                                new NormalCard(Suit.GREEN, Rank.ACE),
+                                new NormalCard(Suit.BLUE, Rank.ACE))
+                                .serialize() + ",asdf");
+        if (de.getResult().getCardOne() instanceof NormalCard normalCardOne
+                && de.getResult().getCardTwo() instanceof NormalCard normalCardTwo
+                && de.getResult().getCardThree() instanceof NormalCard normalCardThree) {
+            assert normalCardOne.getSuit().equals(Suit.BLACK);
+            assert normalCardOne.getRank().equals(Rank.ACE);
+            assert normalCardTwo.getSuit().equals(Suit.GREEN);
+            assert normalCardTwo.getRank().equals(Rank.ACE);
+            assert normalCardThree.getSuit().equals(Suit.BLUE);
+            assert normalCardThree.getRank().equals(Rank.ACE);
         } else {
             throw new Exception("pair combination did not contain a normal card");
         }

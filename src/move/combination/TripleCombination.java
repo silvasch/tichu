@@ -4,6 +4,8 @@ import src.card.Card;
 import src.card.NormalCard;
 import src.card.Rank;
 import src.move.Move;
+import src.serde.DeserializationException;
+import src.serde.PartialDeserialization;
 import src.serde.SerializationException;
 
 public class TripleCombination extends Move implements Comparable<TripleCombination> {
@@ -30,6 +32,35 @@ public class TripleCombination extends Move implements Comparable<TripleCombinat
     public String serialize() throws SerializationException {
         return String.format("triplecomb(%s,%s,%s)", this.cardOne.serialize(), this.cardTwo.serialize(),
                 this.cardThree.serialize());
+    }
+
+    public static PartialDeserialization<TripleCombination> partialDeserialize(String serialized)
+            throws DeserializationException {
+        if (!serialized.startsWith("triplecomb")) {
+            throw new DeserializationException(
+                    "the input does not start with 'triplecomb'");
+        }
+        serialized = serialized.substring(11);
+
+        PartialDeserialization<Card> cardOneDe = Card.partialDeserializeCard(serialized);
+        serialized = cardOneDe.getRemainder().substring(1);
+        PartialDeserialization<Card> cardTwoDe = Card.partialDeserializeCard(serialized);
+        serialized = cardTwoDe.getRemainder().substring(1);
+        PartialDeserialization<Card> cardThreeDe = Card.partialDeserializeCard(serialized);
+
+        if (!cardThreeDe.getRemainder().startsWith(")")) {
+            throw new DeserializationException("triplecomb is unclosed");
+        }
+
+        serialized = cardThreeDe.getRemainder().substring(1);
+
+        try {
+            TripleCombination triple = new TripleCombination(cardOneDe.getResult(), cardTwoDe.getResult(),
+                    cardThreeDe.getResult());
+            return new PartialDeserialization<TripleCombination>(triple, serialized);
+        } catch (InvalidCombinationException e) {
+            throw new DeserializationException(e);
+        }
     }
 
     public int compareTo(TripleCombination other) {
