@@ -6,6 +6,8 @@ import java.util.StringJoiner;
 import src.card.Card;
 import src.card.NormalCard;
 import src.card.Rank;
+import src.serde.DeserializationException;
+import src.serde.PartialDeserialization;
 import src.serde.SerializationException;
 
 public class StairCombination extends Combination {
@@ -37,14 +39,59 @@ public class StairCombination extends Combination {
     public String serialize() throws SerializationException {
         StringJoiner joiner = new StringJoiner(",");
         for (PairCombination pair : this.pairs) {
-            joiner.add(pair.getCardOne().serialize());
-            joiner.add(pair.getCardTwo().serialize());
+            joiner.add(pair.serialize());
         }
         return String.format("staircomb(%s)", joiner);
     }
 
+    public static PartialDeserialization<StairCombination> partialDeserialize(String serialized)
+            throws DeserializationException {
+        if (!(serialized.startsWith("staircomb"))) {
+            throw new DeserializationException(
+                    "the input does not start with 'staircomb'");
+        }
+
+        serialized = serialized.substring(10);
+
+        PairCombination[] pairs = new PairCombination[] {};
+
+        while (true) {
+            // currently, this code fails if the stair does not contain any pairs.
+            // this should never happen, as stairs cannot be constructed with less
+            // than two pairs.
+            PartialDeserialization<PairCombination> de = PairCombination.partialDeserialize(serialized);
+
+            pairs = Arrays.copyOf(pairs, pairs.length + 1);
+            pairs[pairs.length - 1] = de.getResult();
+
+            if (de.getRemainder().startsWith(")")) {
+                serialized = de.getRemainder().substring(1);
+                break;
+            }
+
+            serialized = de.getRemainder().substring(1);
+        }
+
+        try {
+            StairCombination stair = new StairCombination(pairs);
+            return new PartialDeserialization<StairCombination>(stair, serialized);
+        } catch (InvalidCombinationException e) {
+            throw new DeserializationException(e);
+        }
+    }
+
     public boolean equals(StairCombination other) {
-        return Arrays.deepEquals(this.pairs, other.pairs);
+        if (this.pairs.length != other.pairs.length) {
+            return false;
+        }
+
+        for (int i = 0; i < this.pairs.length; i++) {
+            if (!this.pairs[i].equals(other.pairs[i])) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     public int compareTo(StairCombination other) {

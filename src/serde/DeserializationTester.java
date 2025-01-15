@@ -8,6 +8,7 @@ import src.move.combination.StreetCombination;
 import src.move.combination.FullHouseCombination;
 import src.move.combination.PairCombination;
 import src.move.combination.SingleCombination;
+import src.move.combination.StairCombination;
 import src.move.combination.TripleCombination;
 
 public class DeserializationTester {
@@ -20,6 +21,7 @@ public class DeserializationTester {
         DeserializationTester.tripleCombinationDeserializationTest();
         DeserializationTester.fullHouseCombinationDeserializationTest();
         DeserializationTester.streetCombinationDeserializationTest();
+        DeserializationTester.stairCombinationDeserializationTest();
     }
 
     private static void rankDeserializationTest() throws Exception {
@@ -90,6 +92,17 @@ public class DeserializationTester {
         PartialDeserialization<StreetCombination> de = StreetCombination
                 .partialDeserialize(street.serialize() + ",asdf");
         assert de.getResult().equals(street);
+        assert de.getRemainder().equals(",asdf");
+    }
+
+    private static void stairCombinationDeserializationTest() throws Exception {
+        StairCombination stair = new StairCombination(new PairCombination[] {
+                new PairCombination(new NormalCard(Suit.BLACK, Rank.FIVE), new NormalCard(Suit.RED, Rank.FIVE)),
+                new PairCombination(new NormalCard(Suit.BLACK, Rank.SIX), new NormalCard(Suit.RED, Rank.SIX)),
+        });
+        PartialDeserialization<StairCombination> de = StairCombination
+                .partialDeserialize(stair.serialize() + ",asdf");
+        assert de.getResult().equals(stair);
         assert de.getRemainder().equals(",asdf");
     }
 }
