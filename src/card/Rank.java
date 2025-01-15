@@ -28,7 +28,7 @@ public enum Rank implements Serializable {
             throws DeserializationException {
         if (!serialized.startsWith("rank")) {
             throw new DeserializationException(
-                    "the input does not start with 'rank'");
+                    String.format("the input does not start with 'rank' (%s).", serialized));
         }
         serialized = serialized.substring(5);
 

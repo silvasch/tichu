@@ -24,16 +24,17 @@ public class NormalCard extends Card {
             throw new DeserializationException(
                     "the input does not start with 'normalcard'");
         }
-        serialized = serialized.substring(10);
+        serialized = serialized.substring(11);
 
+        PartialDeserialization<Suit> suitDe = Suit.partialDeserialize(serialized);
+        serialized = suitDe.getRemainder().substring(1);
         PartialDeserialization<Rank> rankDe = Rank.partialDeserialize(serialized);
-        PartialDeserialization<Suit> suitDe = Suit.partialDeserialize(rankDe.getRemainder());
 
-        if (!suitDe.getRemainder().startsWith(")")) {
+        if (!rankDe.getRemainder().startsWith(")")) {
             throw new DeserializationException("normalcard is unclosed");
         }
 
-        serialized = suitDe.getRemainder().substring(1);
+        serialized = rankDe.getRemainder().substring(1);
 
         return new PartialDeserialization<NormalCard>(new NormalCard(suitDe.getResult(), rankDe.getResult()),
                 serialized);
