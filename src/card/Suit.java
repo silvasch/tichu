@@ -1,10 +1,16 @@
 package src.card;
 
-public enum Suit {
+import src.serde.Serializable;
+
+public enum Suit implements Serializable {
     GREEN,
     BLUE,
     RED,
     BLACK;
+
+    public String serialize() {
+        return String.format("suit(%s)", this.toString().toLowerCase());
+    }
 
     public String toString() {
         return switch (this) {

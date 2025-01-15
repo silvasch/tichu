@@ -10,6 +10,10 @@ public class NormalCard extends Card {
         this.rank = rank;
     }
 
+    public String serialize() {
+        return String.format("normalcard(%s,%s)", this.suit.serialize(), this.rank.serialize());
+    }
+
     public Suit getSuit() {
         return this.suit;
     }

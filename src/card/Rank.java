@@ -1,6 +1,8 @@
 package src.card;
 
-public enum Rank {
+import src.serde.Serializable;
+
+public enum Rank implements Serializable {
     TWO,
     THREE,
     FOUR,
@@ -14,6 +16,10 @@ public enum Rank {
     QUEEN,
     KING,
     ACE;
+
+    public String serialize() {
+        return String.format("rank(%s)", this.toString().toLowerCase());
+    }
 
     public String toString() {
         return switch (this) {
