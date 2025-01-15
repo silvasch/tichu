@@ -4,6 +4,7 @@ package src.serde;
 import src.card.NormalCard;
 import src.card.Rank;
 import src.card.Suit;
+import src.move.combination.StreetCombination;
 import src.move.combination.FullHouseCombination;
 import src.move.combination.PairCombination;
 import src.move.combination.SingleCombination;
@@ -18,6 +19,7 @@ public class DeserializationTester {
         DeserializationTester.pairCombinationDeserializationTest();
         DeserializationTester.tripleCombinationDeserializationTest();
         DeserializationTester.fullHouseCombinationDeserializationTest();
+        DeserializationTester.streetCombinationDeserializationTest();
     }
 
     private static void rankDeserializationTest() throws Exception {
@@ -76,6 +78,18 @@ public class DeserializationTester {
         PartialDeserialization<FullHouseCombination> de = FullHouseCombination
                 .partialDeserialize(fullHouse.serialize() + ",asdf");
         assert de.getResult().equals(fullHouse);
+        assert de.getRemainder().equals(",asdf");
+    }
+
+    private static void streetCombinationDeserializationTest() throws Exception {
+        StreetCombination street = new StreetCombination(new NormalCard[] { new NormalCard(Suit.BLACK, Rank.SEVEN),
+                new NormalCard(Suit.GREEN, Rank.EIGHT),
+                new NormalCard(Suit.BLUE, Rank.NINE),
+                new NormalCard(Suit.BLACK, Rank.TEN),
+                new NormalCard(Suit.RED, Rank.JACK) });
+        PartialDeserialization<StreetCombination> de = StreetCombination
+                .partialDeserialize(street.serialize() + ",asdf");
+        assert de.getResult().equals(street);
         assert de.getRemainder().equals(",asdf");
     }
 }
