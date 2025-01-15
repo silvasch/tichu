@@ -1,3 +1,5 @@
+@palmista: the changes of this week are in the `dev` and `feat/serde2` branches.
+
 # Tichu
 
 An implementation of the game [Tichu](https://en.wikipedia.org/wiki/Tichu).
