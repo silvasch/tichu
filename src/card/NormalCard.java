@@ -1,5 +1,7 @@
 package src.card;
 
+import src.serde.DeserializationException;
+import src.serde.PartialDeserialization;
 import src.serde.SerializationException;
 
 public class NormalCard extends Card {
@@ -14,6 +16,27 @@ public class NormalCard extends Card {
 
     public String serialize() throws SerializationException {
         return String.format("normalcard(%s,%s)", this.suit.serialize(), this.rank.serialize());
+    }
+
+    public static PartialDeserialization<NormalCard> partialDeserialize(String serialized)
+            throws DeserializationException {
+        if (!serialized.startsWith("normalcard")) {
+            throw new DeserializationException(
+                    "the input does not start with 'normalcard'");
+        }
+        serialized = serialized.substring(10);
+
+        PartialDeserialization<Rank> rankDe = Rank.partialDeserialize(serialized);
+        PartialDeserialization<Suit> suitDe = Suit.partialDeserialize(rankDe.getRemainder());
+
+        if (!suitDe.getRemainder().startsWith(")")) {
+            throw new DeserializationException("normalcard is unclosed");
+        }
+
+        serialized = suitDe.getRemainder().substring(1);
+
+        return new PartialDeserialization<NormalCard>(new NormalCard(suitDe.getResult(), rankDe.getResult()),
+                serialized);
     }
 
     public Suit getSuit() {
