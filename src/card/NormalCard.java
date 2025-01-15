@@ -48,6 +48,14 @@ public class NormalCard extends Card {
         return this.rank;
     }
 
+    public boolean equals(Card other) {
+        if (other instanceof NormalCard normalOther) {
+            return this.suit == normalOther.suit && this.rank == normalOther.rank;
+        } else {
+            return false;
+        }
+    }
+
     public int compareTo(Card other) {
         if (other instanceof NormalCard normalOther) {
             return this.rank.compareTo(normalOther.rank);

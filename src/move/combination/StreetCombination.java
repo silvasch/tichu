@@ -40,6 +40,10 @@ public class StreetCombination extends Combination {
         return String.format("streetcomb(%s)", joiner);
     }
 
+    public boolean equals(StreetCombination other) {
+        return Arrays.deepEquals(this.cards, other.cards);
+    }
+
     public int compareTo(StreetCombination other) {
         return this.cards[0].compareTo(other.cards[0]);
     }

@@ -16,5 +16,7 @@ public abstract class Card implements Comparable<Card>, Serializable {
         throw new DeserializationException(String.format("could not deserialize '%s' as a card", serialized));
     }
 
+    public abstract boolean equals(Card other);
+
     public abstract String toString();
 }

@@ -54,6 +54,10 @@ public class PairCombination extends Move implements Comparable<PairCombination>
         }
     }
 
+    public boolean equals(PairCombination other) {
+        return this.cardOne.equals(other.cardOne) && this.cardTwo.equals(other.cardTwo);
+    }
+
     public int compareTo(PairCombination other) {
         // because cardOne and cardTwo have to be of the same rank, we can just compare
         // one of them.

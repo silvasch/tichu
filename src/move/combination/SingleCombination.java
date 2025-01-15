@@ -37,6 +37,10 @@ public class SingleCombination extends Move implements Comparable<SingleCombinat
                 serialized);
     }
 
+    public boolean equals(SingleCombination other) {
+        return this.card.equals(other.card);
+    }
+
     public int compareTo(SingleCombination other) {
         return this.card.compareTo(other.card);
     }

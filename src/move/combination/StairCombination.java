@@ -43,6 +43,10 @@ public class StairCombination extends Combination {
         return String.format("staircomb(%s)", joiner);
     }
 
+    public boolean equals(StairCombination other) {
+        return Arrays.deepEquals(this.pairs, other.pairs);
+    }
+
     public int compareTo(StairCombination other) {
         return this.pairs[0].compareTo(other.pairs[0]);
     }

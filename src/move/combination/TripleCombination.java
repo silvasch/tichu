@@ -63,6 +63,11 @@ public class TripleCombination extends Move implements Comparable<TripleCombinat
         }
     }
 
+    public boolean equals(TripleCombination other) {
+        return this.cardOne.equals(other.cardOne) && this.cardTwo.equals(other.cardTwo)
+                && this.cardThree.equals(other.cardThree);
+    }
+
     public int compareTo(TripleCombination other) {
         // because cardOne cardTwo and cardThree have to be of the same rank, we can
         // just compare one of them.

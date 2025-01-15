@@ -1,6 +1,8 @@
 package src.move.combination;
 
 import src.move.Move;
+import src.serde.DeserializationException;
+import src.serde.PartialDeserialization;
 import src.serde.SerializationException;
 
 public class FullHouseCombination extends Move implements Comparable<FullHouseCombination> {
@@ -14,6 +16,32 @@ public class FullHouseCombination extends Move implements Comparable<FullHouseCo
 
     public String serialize() throws SerializationException {
         return String.format("fullhousecomb(%s,%s)", this.triple.serialize(), this.pair.serialize());
+    }
+
+    public static PartialDeserialization<FullHouseCombination> partialDeserialize(String serialized)
+            throws DeserializationException {
+        if (!serialized.startsWith("fullhousecomb")) {
+            throw new DeserializationException(
+                    "the input does not start with 'fullhousecomb'");
+        }
+        serialized = serialized.substring(14);
+
+        PartialDeserialization<TripleCombination> tripleDe = TripleCombination.partialDeserialize(serialized);
+        serialized = tripleDe.getRemainder().substring(1);
+        PartialDeserialization<PairCombination> pairDe = PairCombination.partialDeserialize(serialized);
+
+        if (!pairDe.getRemainder().startsWith(")")) {
+            throw new DeserializationException("fullhousecomb is unclosed");
+        }
+
+        serialized = pairDe.getRemainder().substring(1);
+
+        FullHouseCombination fullHouse = new FullHouseCombination(tripleDe.getResult(), pairDe.getResult());
+        return new PartialDeserialization<FullHouseCombination>(fullHouse, serialized);
+    }
+
+    public boolean equals(FullHouseCombination other) {
+        return this.triple.equals(other.triple) && this.pair.equals(other.pair);
     }
 
     public int compareTo(FullHouseCombination other) {

@@ -4,6 +4,7 @@ package src.serde;
 import src.card.NormalCard;
 import src.card.Rank;
 import src.card.Suit;
+import src.move.combination.FullHouseCombination;
 import src.move.combination.PairCombination;
 import src.move.combination.SingleCombination;
 import src.move.combination.TripleCombination;
@@ -16,6 +17,7 @@ public class DeserializationTester {
         DeserializationTester.singleCombinationDeserializationTest();
         DeserializationTester.pairCombinationDeserializationTest();
         DeserializationTester.tripleCombinationDeserializationTest();
+        DeserializationTester.fullHouseCombinationDeserializationTest();
     }
 
     private static void rankDeserializationTest() throws Exception {
@@ -31,61 +33,49 @@ public class DeserializationTester {
     }
 
     private static void normalCardDeserializationTest() throws Exception {
+        NormalCard normalCard = new NormalCard(Suit.BLACK, Rank.ACE);
         PartialDeserialization<NormalCard> de = NormalCard
-                .partialDeserialize(new NormalCard(Suit.BLACK, Rank.ACE).serialize() + ",asdf");
-        assert de.getResult().getSuit().equals(Suit.BLACK);
-        assert de.getResult().getRank().equals(Rank.ACE);
+                .partialDeserialize(normalCard.serialize() + ",asdf");
+        assert de.getResult().equals(normalCard);
         assert de.getRemainder().equals(",asdf");
     }
 
     private static void singleCombinationDeserializationTest() throws Exception {
+        SingleCombination single = new SingleCombination(new NormalCard(Suit.BLACK, Rank.ACE));
         PartialDeserialization<SingleCombination> de = SingleCombination
-                .partialDeserialize(new SingleCombination(new NormalCard(Suit.BLACK, Rank.ACE)).serialize() + ",asdf");
-        if (de.getResult().getCard() instanceof NormalCard normalCard) {
-            assert normalCard.getSuit().equals(Suit.BLACK);
-            assert normalCard.getRank().equals(Rank.ACE);
-        } else {
-            throw new Exception("single combination did not contain a normal card");
-        }
+                .partialDeserialize(single.serialize() + ",asdf");
+        assert de.getResult().equals(single);
         assert de.getRemainder().equals(",asdf");
     }
 
     private static void pairCombinationDeserializationTest() throws Exception {
+        PairCombination pair = new PairCombination(new NormalCard(Suit.BLACK, Rank.ACE),
+                new NormalCard(Suit.GREEN, Rank.ACE));
         PartialDeserialization<PairCombination> de = PairCombination
-                .partialDeserialize(
-                        new PairCombination(new NormalCard(Suit.BLACK, Rank.ACE), new NormalCard(Suit.GREEN, Rank.ACE))
-                                .serialize() + ",asdf");
-        if (de.getResult().getCardOne() instanceof NormalCard normalCardOne
-                && de.getResult().getCardTwo() instanceof NormalCard normalCardTwo) {
-            assert normalCardOne.getSuit().equals(Suit.BLACK);
-            assert normalCardOne.getRank().equals(Rank.ACE);
-            assert normalCardTwo.getSuit().equals(Suit.GREEN);
-            assert normalCardTwo.getRank().equals(Rank.ACE);
-        } else {
-            throw new Exception("pair combination did not contain a normal card");
-        }
+                .partialDeserialize(pair.serialize() + ",asdf");
+        assert de.getResult().equals(pair);
         assert de.getRemainder().equals(",asdf");
     }
 
     private static void tripleCombinationDeserializationTest() throws Exception {
+        TripleCombination triple = new TripleCombination(new NormalCard(Suit.BLACK, Rank.ACE),
+                new NormalCard(Suit.GREEN, Rank.ACE),
+                new NormalCard(Suit.BLUE, Rank.ACE));
         PartialDeserialization<TripleCombination> de = TripleCombination
-                .partialDeserialize(
-                        new TripleCombination(new NormalCard(Suit.BLACK, Rank.ACE),
-                                new NormalCard(Suit.GREEN, Rank.ACE),
-                                new NormalCard(Suit.BLUE, Rank.ACE))
-                                .serialize() + ",asdf");
-        if (de.getResult().getCardOne() instanceof NormalCard normalCardOne
-                && de.getResult().getCardTwo() instanceof NormalCard normalCardTwo
-                && de.getResult().getCardThree() instanceof NormalCard normalCardThree) {
-            assert normalCardOne.getSuit().equals(Suit.BLACK);
-            assert normalCardOne.getRank().equals(Rank.ACE);
-            assert normalCardTwo.getSuit().equals(Suit.GREEN);
-            assert normalCardTwo.getRank().equals(Rank.ACE);
-            assert normalCardThree.getSuit().equals(Suit.BLUE);
-            assert normalCardThree.getRank().equals(Rank.ACE);
-        } else {
-            throw new Exception("pair combination did not contain a normal card");
-        }
+                .partialDeserialize(triple.serialize() + ",asdf");
+        assert de.getResult().equals(triple);
+        assert de.getRemainder().equals(",asdf");
+    }
+
+    private static void fullHouseCombinationDeserializationTest() throws Exception {
+        FullHouseCombination fullHouse = new FullHouseCombination(
+                new TripleCombination(new NormalCard(Suit.BLACK, Rank.ACE),
+                        new NormalCard(Suit.GREEN, Rank.ACE), new NormalCard(Suit.BLUE, Rank.ACE)),
+                new PairCombination(new NormalCard(Suit.BLACK, Rank.SEVEN),
+                        new NormalCard(Suit.GREEN, Rank.SEVEN)));
+        PartialDeserialization<FullHouseCombination> de = FullHouseCombination
+                .partialDeserialize(fullHouse.serialize() + ",asdf");
+        assert de.getResult().equals(fullHouse);
         assert de.getRemainder().equals(",asdf");
     }
 }
