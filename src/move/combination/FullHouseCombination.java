@@ -1,6 +1,7 @@
 package src.move.combination;
 
 import src.move.Move;
+import src.serde.SerializationException;
 
 public class FullHouseCombination extends Move implements Comparable<FullHouseCombination> {
     private TripleCombination triple;
@@ -9,6 +10,10 @@ public class FullHouseCombination extends Move implements Comparable<FullHouseCo
     public FullHouseCombination(TripleCombination triple, PairCombination pair) {
         this.triple = triple;
         this.pair = pair;
+    }
+
+    public String serialize() throws SerializationException {
+        return String.format("fullhousecomb(%s,%s)", this.triple.serialize(), this.pair.serialize());
     }
 
     public int compareTo(FullHouseCombination other) {

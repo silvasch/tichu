@@ -6,6 +6,7 @@ import java.util.StringJoiner;
 import src.card.Card;
 import src.card.NormalCard;
 import src.card.Rank;
+import src.serde.SerializationException;
 
 public class StreetCombination extends Combination {
     private Card[] cards;
@@ -29,6 +30,14 @@ public class StreetCombination extends Combination {
         }
 
         this.cards = cards;
+    }
+
+    public String serialize() throws SerializationException {
+        StringJoiner joiner = new StringJoiner(",");
+        for (Card card : this.cards) {
+            joiner.add(card.serialize());
+        }
+        return String.format("streetcomb(%s)", joiner);
     }
 
     public int compareTo(StreetCombination other) {

@@ -3,6 +3,7 @@ package src.move.combination;
 import src.card.Card;
 import src.card.NormalCard;
 import src.move.Move;
+import src.serde.SerializationException;
 
 public class PairCombination extends Move implements Comparable<PairCombination> {
     private Card cardOne;
@@ -19,6 +20,10 @@ public class PairCombination extends Move implements Comparable<PairCombination>
 
         this.cardOne = cardOne;
         this.cardTwo = cardTwo;
+    }
+
+    public String serialize() throws SerializationException {
+        return String.format("paircomb(%s,%s)", this.cardOne.serialize(), this.cardTwo.serialize());
     }
 
     public int compareTo(PairCombination other) {

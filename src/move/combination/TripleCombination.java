@@ -4,6 +4,7 @@ import src.card.Card;
 import src.card.NormalCard;
 import src.card.Rank;
 import src.move.Move;
+import src.serde.SerializationException;
 
 public class TripleCombination extends Move implements Comparable<TripleCombination> {
     private Card cardOne;
@@ -24,6 +25,11 @@ public class TripleCombination extends Move implements Comparable<TripleCombinat
         this.cardOne = cardOne;
         this.cardTwo = cardTwo;
         this.cardThree = cardThree;
+    }
+
+    public String serialize() throws SerializationException {
+        return String.format("triplecomb(%s,%s,%s)", this.cardOne.serialize(), this.cardTwo.serialize(),
+                this.cardThree.serialize());
     }
 
     public int compareTo(TripleCombination other) {

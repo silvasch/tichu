@@ -1,5 +1,7 @@
 package src.card;
 
+import src.serde.SerializationException;
+
 public class NormalCard extends Card {
 
     private Suit suit;
@@ -10,7 +12,7 @@ public class NormalCard extends Card {
         this.rank = rank;
     }
 
-    public String serialize() {
+    public String serialize() throws SerializationException {
         return String.format("normalcard(%s,%s)", this.suit.serialize(), this.rank.serialize());
     }
 

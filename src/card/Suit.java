@@ -1,6 +1,7 @@
 package src.card;
 
 import src.serde.Serializable;
+import src.serde.SerializationException;
 
 public enum Suit implements Serializable {
     GREEN,
@@ -8,7 +9,7 @@ public enum Suit implements Serializable {
     RED,
     BLACK;
 
-    public String serialize() {
+    public String serialize() throws SerializationException {
         return String.format("suit(%s)", this.toString().toLowerCase());
     }
 

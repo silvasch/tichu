@@ -1,6 +1,7 @@
 package src.card;
 
 import src.serde.Serializable;
+import src.serde.SerializationException;
 
 public enum Rank implements Serializable {
     TWO,
@@ -17,7 +18,7 @@ public enum Rank implements Serializable {
     KING,
     ACE;
 
-    public String serialize() {
+    public String serialize() throws SerializationException {
         return String.format("rank(%s)", this.toString().toLowerCase());
     }
 

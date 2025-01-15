@@ -6,6 +6,7 @@ import java.util.StringJoiner;
 import src.card.Card;
 import src.card.NormalCard;
 import src.card.Rank;
+import src.serde.SerializationException;
 
 public class StairCombination extends Combination {
     private PairCombination[] pairs;
@@ -31,6 +32,15 @@ public class StairCombination extends Combination {
         }
 
         this.pairs = pairs;
+    }
+
+    public String serialize() throws SerializationException {
+        StringJoiner joiner = new StringJoiner(",");
+        for (PairCombination pair : this.pairs) {
+            joiner.add(pair.getCardOne().serialize());
+            joiner.add(pair.getCardTwo().serialize());
+        }
+        return String.format("staircomb(%s)", joiner);
     }
 
     public int compareTo(StairCombination other) {
