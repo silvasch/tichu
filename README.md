@@ -1,4 +1,4 @@
-@palmista: the changes of this week are in the `dev` and `feat/serde2` branches.
+@palmista: the changes of this week are in the `dev` and `feat/construct_combinations` branches.
 
 # Tichu
 
