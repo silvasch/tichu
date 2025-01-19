@@ -9,6 +9,15 @@ public class PartialDeserialization<T> {
         this.remainder = remainder;
     }
 
+    public T deserialize() throws DeserializationException {
+        if (this.remainder != "") {
+            throw new DeserializationException(
+                    String.format("the deserializeation left '%s' as the remainder.", this.remainder));
+        }
+
+        return this.result;
+    }
+
     public T getResult() {
         return this.result;
     }

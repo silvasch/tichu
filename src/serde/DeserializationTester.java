@@ -22,6 +22,7 @@ public class DeserializationTester {
         DeserializationTester.fullHouseCombinationDeserializationTest();
         DeserializationTester.streetCombinationDeserializationTest();
         DeserializationTester.stairCombinationDeserializationTest();
+        DeserializationTester.fullDeserializationTest();
     }
 
     private static void rankDeserializationTest() throws Exception {
@@ -104,5 +105,16 @@ public class DeserializationTester {
                 .partialDeserialize(stair.serialize() + ",asdf");
         assert de.getResult().equals(stair);
         assert de.getRemainder().equals(",asdf");
+    }
+
+    private static void fullDeserializationTest() throws Exception {
+        NormalCard normalCard = new NormalCard(Suit.BLACK, Rank.ACE);
+        NormalCard.partialDeserialize(normalCard.serialize()).deserialize().equals(normalCard);
+        try {
+            NormalCard.partialDeserialize(normalCard.serialize() + ",asdf").deserialize();
+            throw new RuntimeException("this thest expected to fail");
+        } catch (DeserializationException e) {
+
+        }
     }
 }
