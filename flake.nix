@@ -39,8 +39,11 @@
             jdk21
             jdt-language-server
             python3
+            google-java-format
 
             just
+
+            tmux
           ];
         }
       );
