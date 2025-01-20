@@ -18,3 +18,16 @@ run-server *ARGS:
 
 run-client *ARGS:
     @just run "src.client.Client" {{ARGS}}
+
+tmux-session:
+    tmux new-session -d -s "Tichu" -n "server" "just run-server"
+    tmux set-option remain-on-exit on
+    tmux new-window -n "client one" "just run-client"
+    tmux set-option remain-on-exit on
+    tmux new-window -n "client two" "just run-client"
+    tmux set-option remain-on-exit on
+    tmux new-window -n "client three" "just run-client"
+    tmux set-option remain-on-exit on
+    tmux new-window -n "client four" "just run-client"
+    tmux set-option remain-on-exit on
+    tmux attach

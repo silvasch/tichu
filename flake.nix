@@ -41,6 +41,8 @@
             python3
 
             just
+
+            tmux
           ];
         }
       );
