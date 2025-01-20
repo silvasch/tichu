@@ -19,13 +19,15 @@ public abstract class Move {
     public static Move constructFromCards(Card[] cards) throws InvalidCombinationException {
         
         NormalCard[] normalCards = new NormalCard[cards.length];
-        Arrays.sort(normalCards);
+        
 
         for (int i = 0; i < cards.length; i++) {
             if (cards[i] instanceof NormalCard normalcard) {
                 normalCards[i] = normalcard;
             }
         }
+
+        Arrays.sort(normalCards);
 
         if (normalCards.length == 1) {  // single card
             return new SingleCombination(normalCards[0]);
@@ -64,12 +66,12 @@ public abstract class Move {
         
         if (normalCards.length % 2 == 0) {  // stair
             PairCombination[] pairs = new PairCombination[normalCards.length / 2];
-            for (int i = 1; i < normalCards.length / 2; i++) {
+            for (int i = 0; i < normalCards.length / 2; i++) {
                 if (normalCards[2*i].getRank() != normalCards[2*i + 1].getRank()) {
                     break;
                 }
                 pairs[i] = new PairCombination(normalCards[2*i], normalCards[2*i + 1]);
-
+                
                 if (i == normalCards.length / 2 - 1) { // all pairs have been checked 
                     try {
                         return new StairCombination(pairs);
