@@ -6,9 +6,12 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.Arrays;
+import java.util.Scanner;
 import src.card.Card;
 import src.move.Move;
+import src.move.combination.InvalidCombinationException;
 import src.serde.DeserializationException;
+import src.serde.SerializationException;
 
 public class Client {
 
@@ -16,7 +19,8 @@ public class Client {
   private PrintWriter out;
   private BufferedReader in;
 
-  public Client(String ip, int port) throws IOException, DeserializationException {
+  public Client(String ip, int port)
+      throws IOException, DeserializationException, SerializationException {
     this.socket = new Socket(ip, port);
     this.out = new PrintWriter(this.socket.getOutputStream(), true);
     this.in = new BufferedReader(new InputStreamReader(this.socket.getInputStream()));
@@ -36,8 +40,10 @@ public class Client {
       switch (message) {
         case "get-move":
           this.getMove();
+          break;
         case "move-made":
           this.moveMade();
+          break;
         case "abort":
           System.out.println("the game has been aborted");
           break mainloop;
@@ -51,7 +57,7 @@ public class Client {
     }
   }
 
-  private void getMove() throws IOException, DeserializationException {
+  private void getMove() throws IOException, DeserializationException, SerializationException {
     String rawCards = this.in.readLine();
     String rejection = this.in.readLine();
 
@@ -72,6 +78,41 @@ public class Client {
     for (int i = 0; i < cards.length; i++) {
       System.out.println(String.format("%02d -> %s", i, cards[i]));
     }
+
+    Move move;
+
+    outer:
+    while (true) {
+      Card[] cardsToPlay = new Card[] {};
+
+      Scanner scanner = new Scanner(System.in);
+      System.out.print("> ");
+      String rawIndices = scanner.nextLine();
+      scanner.close();
+
+      for (String rawIndex : rawIndices.split(",")) {
+        rawIndex = rawIndex.trim();
+        int index = 0;
+        try {
+          index = Integer.parseInt(rawIndex);
+        } catch (NumberFormatException e) {
+          System.out.println(String.format("%s is not a valid number"));
+          continue outer;
+        }
+        cardsToPlay = Arrays.copyOf(cardsToPlay, cardsToPlay.length + 1);
+        cardsToPlay[cardsToPlay.length - 1] = cards[index];
+      }
+
+      try {
+        move = Move.constructFromCards(cardsToPlay);
+      } catch (InvalidCombinationException e) {
+        System.out.println(String.format("this is not a valid combination: %s", e));
+        continue;
+      }
+      break outer;
+    }
+
+    this.out.println(move.serialize());
   }
 
   private boolean waitForStart() throws IOException {
