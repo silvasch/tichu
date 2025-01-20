@@ -1,5 +1,6 @@
 package src.move;
 
+import java.util.Arrays;
 import src.card.Card;
 import src.card.NormalCard;
 import src.move.combination.FullHouseCombination;
@@ -13,161 +14,157 @@ import src.serde.DeserializationException;
 import src.serde.PartialDeserialization;
 import src.serde.Serializable;
 
-import java.util.Arrays;
-
 public abstract class Move implements Serializable {
 
-    public static PartialDeserialization<Move> partialDeserializeMove(String serialized)
-            throws DeserializationException {
-        if (serialized.startsWith("singlecomb")) {
-            PartialDeserialization<SingleCombination> de =
-                    SingleCombination.partialDeserialize(serialized);
-            return new PartialDeserialization<Move>(de.getResult(), de.getRemainder());
-        } else if (serialized.startsWith("paircomb")) {
-            PartialDeserialization<PairCombination> de =
-                    PairCombination.partialDeserialize(serialized);
-            return new PartialDeserialization<Move>(de.getResult(), de.getRemainder());
-        } else if (serialized.startsWith("triplecomb")) {
-            PartialDeserialization<TripleCombination> de =
-                    TripleCombination.partialDeserialize(serialized);
-            return new PartialDeserialization<Move>(de.getResult(), de.getRemainder());
-        } else if (serialized.startsWith("fullhousecomb")) {
-            PartialDeserialization<FullHouseCombination> de =
-                    FullHouseCombination.partialDeserialize(serialized);
-            return new PartialDeserialization<Move>(de.getResult(), de.getRemainder());
-        } else if (serialized.startsWith("streetcomb")) {
-            PartialDeserialization<StreetCombination> de =
-                    StreetCombination.partialDeserialize(serialized);
-            return new PartialDeserialization<Move>(de.getResult(), de.getRemainder());
-        } else if (serialized.startsWith("staircomb")) {
-            PartialDeserialization<StairCombination> de =
-                    StairCombination.partialDeserialize(serialized);
-            return new PartialDeserialization<Move>(de.getResult(), de.getRemainder());
-        } else {
-            throw new DeserializationException(
-                    String.format("failed to deserialize '%s' as a move.", serialized));
-        }
+  public static PartialDeserialization<Move> partialDeserializeMove(String serialized)
+      throws DeserializationException {
+    if (serialized.startsWith("singlecomb")) {
+      PartialDeserialization<SingleCombination> de =
+          SingleCombination.partialDeserialize(serialized);
+      return new PartialDeserialization<Move>(de.getResult(), de.getRemainder());
+    } else if (serialized.startsWith("paircomb")) {
+      PartialDeserialization<PairCombination> de = PairCombination.partialDeserialize(serialized);
+      return new PartialDeserialization<Move>(de.getResult(), de.getRemainder());
+    } else if (serialized.startsWith("triplecomb")) {
+      PartialDeserialization<TripleCombination> de =
+          TripleCombination.partialDeserialize(serialized);
+      return new PartialDeserialization<Move>(de.getResult(), de.getRemainder());
+    } else if (serialized.startsWith("fullhousecomb")) {
+      PartialDeserialization<FullHouseCombination> de =
+          FullHouseCombination.partialDeserialize(serialized);
+      return new PartialDeserialization<Move>(de.getResult(), de.getRemainder());
+    } else if (serialized.startsWith("streetcomb")) {
+      PartialDeserialization<StreetCombination> de =
+          StreetCombination.partialDeserialize(serialized);
+      return new PartialDeserialization<Move>(de.getResult(), de.getRemainder());
+    } else if (serialized.startsWith("staircomb")) {
+      PartialDeserialization<StairCombination> de = StairCombination.partialDeserialize(serialized);
+      return new PartialDeserialization<Move>(de.getResult(), de.getRemainder());
+    } else {
+      throw new DeserializationException(
+          String.format("failed to deserialize '%s' as a move.", serialized));
+    }
+  }
+
+  public abstract String toString();
+
+  public static Move constructFromCards(Card[] cards) throws InvalidCombinationException {
+
+    NormalCard[] normalCards = new NormalCard[cards.length];
+
+    for (int i = 0; i < cards.length; i++) {
+      if (cards[i] instanceof NormalCard normalcard) {
+        normalCards[i] = normalcard;
+      }
     }
 
-    public abstract String toString();
+    Arrays.sort(normalCards);
 
-    public static Move constructFromCards(Card[] cards) throws InvalidCombinationException {
-
-        NormalCard[] normalCards = new NormalCard[cards.length];
-
-        for (int i = 0; i < cards.length; i++) {
-            if (cards[i] instanceof NormalCard normalcard) {
-                normalCards[i] = normalcard;
-            }
-        }
-
-        Arrays.sort(normalCards);
-
-        if (normalCards.length == 1) { // single card
-            return new SingleCombination(normalCards[0]);
-        }
-
-        if (normalCards.length == 2) { // pair
-            try {
-                return new PairCombination(normalCards[0], normalCards[1]);
-            } catch (InvalidCombinationException e) {
-            }
-        }
-
-        if (normalCards.length == 3) { // triple
-            try {
-                return new TripleCombination(normalCards[0], normalCards[1], normalCards[2]);
-            } catch (InvalidCombinationException e) {
-            }
-        }
-
-        if (normalCards.length == 5) { // full house
-            if (normalCards[0].getRank() == normalCards[1].getRank()
-                    && normalCards[0].getRank() == normalCards[2].getRank()
-                    && normalCards[3].getRank() == normalCards[4].getRank()) {
-                // checks if the full house is valid.
-                return new FullHouseCombination(
-                        new TripleCombination(normalCards[0], normalCards[1], normalCards[2]),
-                        new PairCombination(normalCards[3], normalCards[4]));
-            }
-
-            if (normalCards[0].getRank() == normalCards[1].getRank()
-                    && normalCards[2].getRank() == normalCards[3].getRank()
-                    && normalCards[2].getRank() == normalCards[4].getRank()) {
-                // checks the other possibility for a valid full house.
-                return new FullHouseCombination(
-                        new TripleCombination(normalCards[2], normalCards[3], normalCards[4]),
-                        new PairCombination(normalCards[0], normalCards[1]));
-            }
-        }
-
-        // streets and stairs can vary in length
-
-        try { // street
-            return new StreetCombination(normalCards);
-        } catch (InvalidCombinationException e) {
-        }
-
-        if (normalCards.length % 2 == 0) { // stair
-            PairCombination[] pairs = new PairCombination[normalCards.length / 2];
-            for (int i = 0; i < normalCards.length / 2; i++) {
-                if (normalCards[2 * i].getRank() != normalCards[2 * i + 1].getRank()) {
-                    break;
-                }
-                pairs[i] = new PairCombination(normalCards[2 * i], normalCards[2 * i + 1]);
-
-                if (i == normalCards.length / 2 - 1) { // all pairs have been checked
-                    try {
-                        return new StairCombination(pairs);
-                    } catch (InvalidCombinationException e) {
-                    }
-                }
-            }
-        }
-
-        // no valid combination has been found
-        throw new InvalidCombinationException("invalid combination");
+    if (normalCards.length == 1) { // single card
+      return new SingleCombination(normalCards[0]);
     }
 
-    public boolean equals(SingleCombination other) {
-        if (this instanceof SingleCombination self) {
-            return self.equals(other);
-        }
-        return false;
+    if (normalCards.length == 2) { // pair
+      try {
+        return new PairCombination(normalCards[0], normalCards[1]);
+      } catch (InvalidCombinationException e) {
+      }
     }
 
-    public boolean equals(PairCombination other) {
-        if (this instanceof PairCombination self) {
-            return self.equals(other);
-        }
-        return false;
+    if (normalCards.length == 3) { // triple
+      try {
+        return new TripleCombination(normalCards[0], normalCards[1], normalCards[2]);
+      } catch (InvalidCombinationException e) {
+      }
     }
 
-    public boolean equals(TripleCombination other) {
-        if (this instanceof TripleCombination self) {
-            return self.equals(other);
-        }
-        return false;
+    if (normalCards.length == 5) { // full house
+      if (normalCards[0].getRank() == normalCards[1].getRank()
+          && normalCards[0].getRank() == normalCards[2].getRank()
+          && normalCards[3].getRank() == normalCards[4].getRank()) {
+        // checks if the full house is valid.
+        return new FullHouseCombination(
+            new TripleCombination(normalCards[0], normalCards[1], normalCards[2]),
+            new PairCombination(normalCards[3], normalCards[4]));
+      }
+
+      if (normalCards[0].getRank() == normalCards[1].getRank()
+          && normalCards[2].getRank() == normalCards[3].getRank()
+          && normalCards[2].getRank() == normalCards[4].getRank()) {
+        // checks the other possibility for a valid full house.
+        return new FullHouseCombination(
+            new TripleCombination(normalCards[2], normalCards[3], normalCards[4]),
+            new PairCombination(normalCards[0], normalCards[1]));
+      }
     }
 
-    public boolean equals(FullHouseCombination other) {
-        if (this instanceof FullHouseCombination self) {
-            return self.equals(other);
-        }
-        return false;
+    // streets and stairs can vary in length
+
+    try { // street
+      return new StreetCombination(normalCards);
+    } catch (InvalidCombinationException e) {
     }
 
-    public boolean equals(StreetCombination other) {
-        if (this instanceof StreetCombination self) {
-            return self.equals(other);
+    if (normalCards.length % 2 == 0) { // stair
+      PairCombination[] pairs = new PairCombination[normalCards.length / 2];
+      for (int i = 0; i < normalCards.length / 2; i++) {
+        if (normalCards[2 * i].getRank() != normalCards[2 * i + 1].getRank()) {
+          break;
         }
-        return false;
+        pairs[i] = new PairCombination(normalCards[2 * i], normalCards[2 * i + 1]);
+
+        if (i == normalCards.length / 2 - 1) { // all pairs have been checked
+          try {
+            return new StairCombination(pairs);
+          } catch (InvalidCombinationException e) {
+          }
+        }
+      }
     }
 
-    public boolean equals(StairCombination other) {
-        if (this instanceof StairCombination self) {
-            return self.equals(other);
-        }
-        return false;
+    // no valid combination has been found
+    throw new InvalidCombinationException("invalid combination");
+  }
+
+  public boolean equals(SingleCombination other) {
+    if (this instanceof SingleCombination self) {
+      return self.equals(other);
     }
+    return false;
+  }
+
+  public boolean equals(PairCombination other) {
+    if (this instanceof PairCombination self) {
+      return self.equals(other);
+    }
+    return false;
+  }
+
+  public boolean equals(TripleCombination other) {
+    if (this instanceof TripleCombination self) {
+      return self.equals(other);
+    }
+    return false;
+  }
+
+  public boolean equals(FullHouseCombination other) {
+    if (this instanceof FullHouseCombination self) {
+      return self.equals(other);
+    }
+    return false;
+  }
+
+  public boolean equals(StreetCombination other) {
+    if (this instanceof StreetCombination self) {
+      return self.equals(other);
+    }
+    return false;
+  }
+
+  public boolean equals(StairCombination other) {
+    if (this instanceof StairCombination self) {
+      return self.equals(other);
+    }
+    return false;
+  }
 }

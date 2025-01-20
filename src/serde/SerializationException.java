@@ -1,9 +1,9 @@
 package src.serde;
 
 public class SerializationException extends Exception {
-    public SerializationException() {}
+  public SerializationException() {}
 
-    public SerializationException(String message) {
-        super(message);
-    }
+  public SerializationException(String message) {
+    super(message);
+  }
 }
