@@ -15,15 +15,15 @@ import src.move.combination.TripleCombination;
 public class MoveTester {
 
     public static void main(String[] args) throws Exception {
-        assert Move.constructFromCards(new Card[] { new NormalCard(Suit.BLACK, Rank.ACE) })
+        assert Move.constructFromCards(new Card[] {new NormalCard(Suit.BLACK, Rank.ACE)})
                 .equals(new SingleCombination(new NormalCard(Suit.BLACK, Rank.ACE)));
 
         assert Move.constructFromCards(
-                new Card[] {
-                        new NormalCard(Suit.BLACK, Rank.TEN),
-                        new NormalCard(Suit.RED, Rank.TEN),
-                        new NormalCard(Suit.BLUE, Rank.TEN)
-                })
+                        new Card[] {
+                            new NormalCard(Suit.BLACK, Rank.TEN),
+                            new NormalCard(Suit.RED, Rank.TEN),
+                            new NormalCard(Suit.BLUE, Rank.TEN)
+                        })
                 .equals(
                         new TripleCombination(
                                 new NormalCard(Suit.BLACK, Rank.TEN),
@@ -31,100 +31,100 @@ public class MoveTester {
                                 new NormalCard(Suit.BLUE, Rank.TEN)));
 
         assert Move.constructFromCards(
-                new Card[] {
-                        new NormalCard(Suit.BLACK, Rank.ACE),
-                        new NormalCard(Suit.GREEN, Rank.KING),
-                        new NormalCard(Suit.RED, Rank.ACE),
-                        new NormalCard(Suit.BLUE, Rank.KING)
-                })
+                        new Card[] {
+                            new NormalCard(Suit.BLACK, Rank.ACE),
+                            new NormalCard(Suit.GREEN, Rank.KING),
+                            new NormalCard(Suit.RED, Rank.ACE),
+                            new NormalCard(Suit.BLUE, Rank.KING)
+                        })
                 .equals(
                         new StairCombination(
                                 new PairCombination[] {
-                                        new PairCombination(
-                                                new NormalCard(Suit.BLACK, Rank.ACE),
-                                                new NormalCard(Suit.RED, Rank.ACE)),
-                                        new PairCombination(
-                                                new NormalCard(Suit.GREEN, Rank.KING),
-                                                new NormalCard(Suit.BLUE, Rank.KING))
+                                    new PairCombination(
+                                            new NormalCard(Suit.BLACK, Rank.ACE),
+                                            new NormalCard(Suit.RED, Rank.ACE)),
+                                    new PairCombination(
+                                            new NormalCard(Suit.GREEN, Rank.KING),
+                                            new NormalCard(Suit.BLUE, Rank.KING))
                                 }));
 
         assert Move.constructFromCards(
-                new Card[] {
-                        new NormalCard(Suit.BLACK, Rank.ACE),
-                        new NormalCard(Suit.RED, Rank.ACE),
-                        new NormalCard(Suit.GREEN, Rank.KING),
-                        new NormalCard(Suit.BLUE, Rank.KING),
-                        new NormalCard(Suit.GREEN, Rank.QUEEN),
-                        new NormalCard(Suit.BLUE, Rank.QUEEN)
-                })
+                        new Card[] {
+                            new NormalCard(Suit.BLACK, Rank.ACE),
+                            new NormalCard(Suit.RED, Rank.ACE),
+                            new NormalCard(Suit.GREEN, Rank.KING),
+                            new NormalCard(Suit.BLUE, Rank.KING),
+                            new NormalCard(Suit.GREEN, Rank.QUEEN),
+                            new NormalCard(Suit.BLUE, Rank.QUEEN)
+                        })
                 .equals(
                         new StairCombination(
                                 new PairCombination[] {
-                                        new PairCombination(
-                                                new NormalCard(Suit.BLACK, Rank.ACE),
-                                                new NormalCard(Suit.RED, Rank.ACE)),
-                                        new PairCombination(
-                                                new NormalCard(Suit.GREEN, Rank.KING),
-                                                new NormalCard(Suit.BLUE, Rank.KING)),
-                                        new PairCombination(
-                                                new NormalCard(Suit.GREEN, Rank.QUEEN),
-                                                new NormalCard(Suit.BLUE, Rank.QUEEN))
+                                    new PairCombination(
+                                            new NormalCard(Suit.BLACK, Rank.ACE),
+                                            new NormalCard(Suit.RED, Rank.ACE)),
+                                    new PairCombination(
+                                            new NormalCard(Suit.GREEN, Rank.KING),
+                                            new NormalCard(Suit.BLUE, Rank.KING)),
+                                    new PairCombination(
+                                            new NormalCard(Suit.GREEN, Rank.QUEEN),
+                                            new NormalCard(Suit.BLUE, Rank.QUEEN))
                                 }));
 
         assert Move.constructFromCards(
-                new Card[] {
-                        new NormalCard(Suit.BLACK, Rank.ACE),
-                        new NormalCard(Suit.RED, Rank.KING),
-                        new NormalCard(Suit.GREEN, Rank.QUEEN),
-                        new NormalCard(Suit.BLUE, Rank.JACK),
-                        new NormalCard(Suit.GREEN, Rank.TEN),
-                        new NormalCard(Suit.BLUE, Rank.NINE)
-                })
+                        new Card[] {
+                            new NormalCard(Suit.BLACK, Rank.ACE),
+                            new NormalCard(Suit.RED, Rank.KING),
+                            new NormalCard(Suit.GREEN, Rank.QUEEN),
+                            new NormalCard(Suit.BLUE, Rank.JACK),
+                            new NormalCard(Suit.GREEN, Rank.TEN),
+                            new NormalCard(Suit.BLUE, Rank.NINE)
+                        })
                 .equals(
                         new StreetCombination(
                                 new Card[] {
-                                        new NormalCard(Suit.BLACK, Rank.ACE),
-                                        new NormalCard(Suit.RED, Rank.KING),
-                                        new NormalCard(Suit.GREEN, Rank.QUEEN),
-                                        new NormalCard(Suit.BLUE, Rank.JACK),
-                                        new NormalCard(Suit.GREEN, Rank.TEN),
-                                        new NormalCard(Suit.BLUE, Rank.NINE)
+                                    new NormalCard(Suit.BLACK, Rank.ACE),
+                                    new NormalCard(Suit.RED, Rank.KING),
+                                    new NormalCard(Suit.GREEN, Rank.QUEEN),
+                                    new NormalCard(Suit.BLUE, Rank.JACK),
+                                    new NormalCard(Suit.GREEN, Rank.TEN),
+                                    new NormalCard(Suit.BLUE, Rank.NINE)
                                 }));
 
         assert Move.constructFromCards(
-                new Card[] {
-                        new NormalCard(Suit.BLACK, Rank.FIVE),
-                        new NormalCard(Suit.RED, Rank.KING),
-                        new NormalCard(Suit.GREEN, Rank.SEVEN),
-                        new NormalCard(Suit.BLUE, Rank.TEN),
-                        new NormalCard(Suit.GREEN, Rank.NINE),
-                        new NormalCard(Suit.BLUE, Rank.QUEEN),
-                        new NormalCard(Suit.BLUE, Rank.JACK),
-                        new NormalCard(Suit.GREEN, Rank.SIX),
-                        new NormalCard(Suit.BLACK, Rank.EIGHT)
-                })
+                        new Card[] {
+                            new NormalCard(Suit.BLACK, Rank.FIVE),
+                            new NormalCard(Suit.RED, Rank.KING),
+                            new NormalCard(Suit.GREEN, Rank.SEVEN),
+                            new NormalCard(Suit.BLUE, Rank.TEN),
+                            new NormalCard(Suit.GREEN, Rank.NINE),
+                            new NormalCard(Suit.BLUE, Rank.QUEEN),
+                            new NormalCard(Suit.BLUE, Rank.JACK),
+                            new NormalCard(Suit.GREEN, Rank.SIX),
+                            new NormalCard(Suit.BLACK, Rank.EIGHT)
+                        })
                 .equals(
                         new StreetCombination(
                                 new Card[] {
-                                        new NormalCard(Suit.GREEN, Rank.SIX),
-                                        new NormalCard(Suit.BLUE, Rank.JACK),
-                                        new NormalCard(Suit.BLUE, Rank.TEN),
-                                        new NormalCard(Suit.GREEN, Rank.NINE),
-                                        new NormalCard(Suit.RED, Rank.KING),
-                                        new NormalCard(Suit.GREEN, Rank.SEVEN),
-                                        new NormalCard(Suit.BLACK, Rank.EIGHT),
-                                        new NormalCard(Suit.BLACK, Rank.FIVE),
-                                        new NormalCard(Suit.BLUE, Rank.QUEEN)
+                                    new NormalCard(Suit.GREEN, Rank.SIX),
+                                    new NormalCard(Suit.BLUE, Rank.JACK),
+                                    new NormalCard(Suit.BLUE, Rank.TEN),
+                                    new NormalCard(Suit.GREEN, Rank.NINE),
+                                    new NormalCard(Suit.RED, Rank.KING),
+                                    new NormalCard(Suit.GREEN, Rank.SEVEN),
+                                    new NormalCard(Suit.BLACK, Rank.EIGHT),
+                                    new NormalCard(Suit.BLACK, Rank.FIVE),
+                                    new NormalCard(Suit.BLUE, Rank.QUEEN)
                                 }));
 
         assert Move.constructFromCards(
-                new Card[] {
-                        new NormalCard(Suit.BLACK, Rank.TWO),
-                        new NormalCard(Suit.RED, Rank.THREE),
-                        new NormalCard(Suit.GREEN, Rank.TWO),
-                        new NormalCard(Suit.BLUE, Rank.TWO),
-                        new NormalCard(Suit.BLACK, Rank.THREE)
-                })
+                        new Card[] {
+                            new NormalCard(Suit.BLACK, Rank.TWO),
+                            new NormalCard(Suit.RED, Rank.THREE),
+                            new NormalCard(Suit.GREEN, Rank.TWO),
+                            new NormalCard(Suit.BLUE, Rank.TWO),
+                            new NormalCard(Suit.BLACK, Rank.THREE)
+                        })
                 .equals(
                         new FullHouseCombination(
                                 new TripleCombination(
@@ -136,18 +136,18 @@ public class MoveTester {
                                         new NormalCard(Suit.RED, Rank.THREE))));
 
         assert Move.constructFromCards(
-                new Card[] {
-                        new NormalCard(Suit.BLACK, Rank.ACE), new NormalCard(Suit.RED, Rank.ACE)
-                })
+                        new Card[] {
+                            new NormalCard(Suit.BLACK, Rank.ACE), new NormalCard(Suit.RED, Rank.ACE)
+                        })
                 .equals(
                         new PairCombination(
                                 new NormalCard(Suit.BLACK, Rank.ACE),
                                 new NormalCard(Suit.RED, Rank.ACE)));
 
         assert Move.constructFromCards(
-                new Card[] {
-                        new NormalCard(Suit.BLACK, Rank.ACE), new NormalCard(Suit.RED, Rank.ACE)
-                })
+                        new Card[] {
+                            new NormalCard(Suit.BLACK, Rank.ACE), new NormalCard(Suit.RED, Rank.ACE)
+                        })
                 .equals(
                         new PairCombination(
                                 new NormalCard(Suit.BLACK, Rank.ACE),
@@ -156,7 +156,7 @@ public class MoveTester {
         try {
             Move.constructFromCards(
                     new Card[] {
-                            new NormalCard(Suit.BLACK, Rank.EIGHT), new NormalCard(Suit.RED, Rank.SEVEN)
+                        new NormalCard(Suit.BLACK, Rank.EIGHT), new NormalCard(Suit.RED, Rank.SEVEN)
                     });
             throw new RuntimeException("this test expects an exception to happen.");
         } catch (InvalidCombinationException e) {
@@ -166,9 +166,9 @@ public class MoveTester {
         try {
             Move.constructFromCards(
                     new Card[] {
-                            new NormalCard(Suit.BLACK, Rank.EIGHT),
-                            new NormalCard(Suit.RED, Rank.SEVEN),
-                            new NormalCard(Suit.BLUE, Rank.SEVEN)
+                        new NormalCard(Suit.BLACK, Rank.EIGHT),
+                        new NormalCard(Suit.RED, Rank.SEVEN),
+                        new NormalCard(Suit.BLUE, Rank.SEVEN)
                     });
             throw new RuntimeException("this test expects an exception to happen.");
         } catch (InvalidCombinationException e) {
@@ -178,10 +178,10 @@ public class MoveTester {
         try {
             Move.constructFromCards(
                     new Card[] {
-                            new NormalCard(Suit.BLACK, Rank.EIGHT),
-                            new NormalCard(Suit.RED, Rank.EIGHT),
-                            new NormalCard(Suit.BLUE, Rank.SIX),
-                            new NormalCard(Suit.GREEN, Rank.SIX)
+                        new NormalCard(Suit.BLACK, Rank.EIGHT),
+                        new NormalCard(Suit.RED, Rank.EIGHT),
+                        new NormalCard(Suit.BLUE, Rank.SIX),
+                        new NormalCard(Suit.GREEN, Rank.SIX)
                     });
             throw new RuntimeException("this test expects an exception to happen.");
         } catch (InvalidCombinationException e) {
@@ -191,11 +191,11 @@ public class MoveTester {
         try {
             Move.constructFromCards(
                     new Card[] {
-                            new NormalCard(Suit.BLACK, Rank.EIGHT),
-                            new NormalCard(Suit.RED, Rank.SEVEN),
-                            new NormalCard(Suit.BLUE, Rank.NINE),
-                            new NormalCard(Suit.GREEN, Rank.TEN),
-                            new NormalCard(Suit.GREEN, Rank.QUEEN)
+                        new NormalCard(Suit.BLACK, Rank.EIGHT),
+                        new NormalCard(Suit.RED, Rank.SEVEN),
+                        new NormalCard(Suit.BLUE, Rank.NINE),
+                        new NormalCard(Suit.GREEN, Rank.TEN),
+                        new NormalCard(Suit.GREEN, Rank.QUEEN)
                     });
             throw new RuntimeException("this test expects an exception to happen.");
         } catch (InvalidCombinationException e) {
