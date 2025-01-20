@@ -31,3 +31,6 @@ tmux-session:
     tmux new-window -n "client four" "just run-client"
     tmux set-option remain-on-exit on
     tmux attach
+
+format:
+    find . -type f -name "*.java" | xargs google-java-format -r
