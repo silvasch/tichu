@@ -28,6 +28,17 @@ public class Player {
         this.out.println("start");
     }
 
+    public void informOfEnd(boolean won, int points, int enemyPoints) {
+        this.out.println("ended");
+        if (won) {
+            this.out.println("true");
+        } else {
+            this.out.println("false");
+        }
+        this.out.println(Integer.toString(points));
+        this.out.println(Integer.toString(enemyPoints));
+    }
+
     public void informOfAbort() {
         this.out.println("abort");
     }

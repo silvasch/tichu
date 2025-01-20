@@ -35,9 +35,8 @@ public class Server {
             player.informOfStart();
         }
 
-        for (Player player : this.getPlayers()) {
-            player.informOfAbort();
-        }
+        this.teamOne.informOfEnd(true, this.teamTwo.getPoints());
+        this.teamTwo.informOfEnd(false, this.teamOne.getPoints());
     }
 
     private Socket acceptConnection() throws IOException {

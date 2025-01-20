@@ -32,6 +32,9 @@ public class Client {
                 case "abort":
                     System.out.println("the game has been aborted");
                     break mainloop;
+                case "ended":
+                    this.endOfGame();
+                    break mainloop;
                 default: {
                 }
             }
@@ -47,6 +50,35 @@ public class Client {
                 return false;
             default:
                 throw new RuntimeException(String.format("received invalid message '%s'.", message));
+        }
+    }
+
+    private void endOfGame() throws IOException {
+        String rawWon = this.in.readLine();
+        String rawPoints = this.in.readLine();
+        String rawEnemyPoints = this.in.readLine();
+
+        boolean won = true;
+        if (rawWon.equals("false")) {
+            won = false;
+        }
+
+        int points = 0;
+        int enemyPoints = 0;
+        try {
+            points = Integer.parseInt(rawPoints);
+            enemyPoints = Integer.parseInt(rawEnemyPoints);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
+        System.out.println("the game has ended.");
+        if (won) {
+            System.out.println(String.format("your team won with %d points.", points));
+            System.out.println(String.format("the other team had %d points.", enemyPoints));
+        } else {
+            System.out.println(String.format("the other team won with %d points.", enemyPoints));
+            System.out.println(String.format("your team had %d points.", points));
         }
     }
 
