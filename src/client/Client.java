@@ -18,7 +18,35 @@ public class Client {
         this.in = new BufferedReader(new InputStreamReader(this.socket.getInputStream()));
         System.out.println("connected.");
 
-        while (true) {
+        boolean doesStart = this.waitForStart();
+        if (!doesStart) {
+            System.out.println("the game was aborted.");
+            return;
+        }
+        System.out.println("the game is starting.");
+
+        mainloop: while (true) {
+            String message = this.in.readLine();
+
+            switch (message) {
+                case "abort":
+                    System.out.println("the game has been aborted");
+                    break mainloop;
+                default: {
+                }
+            }
+        }
+    }
+
+    private boolean waitForStart() throws IOException {
+        String message = this.in.readLine();
+        switch (message) {
+            case "start":
+                return true;
+            case "abort":
+                return false;
+            default:
+                throw new RuntimeException(String.format("received invalid message '%s'.", message));
         }
     }
 
@@ -47,6 +75,14 @@ public class Client {
 
         System.out.println(String.format("connecting to '%s:%s'.", ip, port));
 
-        new Client(ip, port);
+        Client client = null;
+        try {
+            client = new Client(ip, port);
+        } catch (Exception e) {
+            if (client != null) {
+                client.close();
+            }
+            e.printStackTrace(System.out);
+        }
     }
 }

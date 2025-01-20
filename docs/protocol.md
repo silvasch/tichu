@@ -24,6 +24,14 @@ Inform the client that the game will begin.
 start
 ```
 
+**abort**
+
+Inform the client that the game was aborted.
+
+```
+abort
+```
+
 **move-made**
 
 Inform the client of a move made by another player.

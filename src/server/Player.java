@@ -18,6 +18,14 @@ public class Player {
         this.in = new BufferedReader(new InputStreamReader(this.socket.getInputStream()));
     }
 
+    public void informOfStart() {
+        this.out.println("start");
+    }
+
+    public void informOfAbort() {
+        this.out.println("abort");
+    }
+
     public void close() throws IOException {
         this.in.close();
         this.out.close();

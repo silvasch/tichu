@@ -20,9 +20,14 @@ public class Server {
         Socket socketFour = this.acceptConnection();
 
         this.teamOne = new Team(socketOne, socketThree);
-        this.teamOne = new Team(socketTwo, socketFour);
+        this.teamTwo = new Team(socketTwo, socketFour);
 
-        while (true) {
+        for (Player player : this.getPlayers()) {
+            player.informOfStart();
+        }
+
+        for (Player player : this.getPlayers()) {
+            player.informOfAbort();
         }
     }
 
@@ -30,6 +35,23 @@ public class Server {
         Socket socket = this.socket.accept();
         System.out.println("got a connection.");
         return socket;
+    }
+
+    private Player[] getPlayers() {
+        return new Player[] {
+                this.teamOne.getPlayerOne(),
+                this.teamOne.getPlayerTwo(),
+                this.teamTwo.getPlayerOne(),
+                this.teamTwo.getPlayerTwo(),
+        };
+    }
+
+    private void close() throws IOException {
+        for (Player player : this.getPlayers()) {
+            player.close();
+        }
+
+        this.socket.close();
     }
 
     public static void main(String[] args) throws IOException {
@@ -45,6 +67,14 @@ public class Server {
 
         System.out.println(String.format("starting the server on '%s'.", port));
 
-        new Server(port);
+        Server server = null;
+        try {
+            server = new Server(port);
+        } catch (Exception e) {
+            if (server != null) {
+                server.close();
+            }
+            e.printStackTrace(System.out);
+        }
     }
 }

@@ -11,4 +11,12 @@ public class Team {
         this.playerOne = new Player(socketOne);
         this.playerTwo = new Player(socketTwo);
     }
+
+    public Player getPlayerOne() {
+        return this.playerOne;
+    }
+
+    public Player getPlayerTwo() {
+        return this.playerTwo;
+    }
 }
