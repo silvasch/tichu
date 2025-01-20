@@ -34,4 +34,4 @@ tmux-session:
     tmux attach
 
 format:
-    find . -type f -name "*.java" | xargs google-java-format -r
+    find . -type f -name "*.java" | xargs google-java-format -r --aosp

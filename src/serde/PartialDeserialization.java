@@ -1,28 +1,29 @@
 package src.serde;
 
 public class PartialDeserialization<T> {
-  private T result;
-  private String remainder;
+    private T result;
+    private String remainder;
 
-  public PartialDeserialization(T result, String remainder) {
-    this.result = result;
-    this.remainder = remainder;
-  }
-
-  public T deserialize() throws DeserializationException {
-    if (this.remainder != "") {
-      throw new DeserializationException(
-          String.format("the deserializeation left '%s' as the remainder.", this.remainder));
+    public PartialDeserialization(T result, String remainder) {
+        this.result = result;
+        this.remainder = remainder;
     }
 
-    return this.result;
-  }
+    public T deserialize() throws DeserializationException {
+        if (this.remainder != "") {
+            throw new DeserializationException(
+                    String.format(
+                            "the deserializeation left '%s' as the remainder.", this.remainder));
+        }
 
-  public T getResult() {
-    return this.result;
-  }
+        return this.result;
+    }
 
-  public String getRemainder() {
-    return this.remainder;
-  }
+    public T getResult() {
+        return this.result;
+    }
+
+    public String getRemainder() {
+        return this.remainder;
+    }
 }
