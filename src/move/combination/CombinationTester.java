@@ -7,10 +7,12 @@ import src.card.Suit;
 
 public class CombinationTester {
 
-  public static void main(String[] args) {
+  public static void main(String[] args) throws InvalidCombinationException {
     assert new SingleCombination(new NormalCard(Suit.BLACK, Rank.ACE))
         .toString()
         .equals("Single: Black Ace");
+
+    assert new PairCombination(new NormalCard(Suit.BLACK, Rank.ACE), new NormalCard(Suit.RED, Rank.ACE)).equals(new PairCombination(new NormalCard(Suit.RED, Rank.ACE), new NormalCard(Suit.BLACK, Rank.ACE)));
 
     try {
       new PairCombination(
