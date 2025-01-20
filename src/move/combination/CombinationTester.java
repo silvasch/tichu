@@ -12,7 +12,20 @@ public class CombinationTester {
         .toString()
         .equals("Single: Black Ace");
 
-    assert new PairCombination(new NormalCard(Suit.BLACK, Rank.ACE), new NormalCard(Suit.RED, Rank.ACE)).equals(new PairCombination(new NormalCard(Suit.RED, Rank.ACE), new NormalCard(Suit.BLACK, Rank.ACE)));
+    assert new PairCombination(
+            new NormalCard(Suit.BLACK, Rank.ACE), new NormalCard(Suit.RED, Rank.ACE))
+        .equals(
+            new PairCombination(
+                new NormalCard(Suit.RED, Rank.ACE), new NormalCard(Suit.BLACK, Rank.ACE)));
+    assert new TripleCombination(
+            new NormalCard(Suit.BLACK, Rank.ACE),
+            new NormalCard(Suit.RED, Rank.ACE),
+            new NormalCard(Suit.GREEN, Rank.ACE))
+        .equals(
+            new TripleCombination(
+                new NormalCard(Suit.RED, Rank.ACE),
+                new NormalCard(Suit.BLACK, Rank.ACE),
+                new NormalCard(Suit.GREEN, Rank.ACE)));
 
     try {
       new PairCombination(
