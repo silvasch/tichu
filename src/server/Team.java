@@ -3,13 +3,15 @@ package src.server;
 import java.io.IOException;
 import java.net.Socket;
 
+import src.card.Card;
+
 public class Team {
     private Player playerOne;
     private Player playerTwo;
 
-    public Team(Socket socketOne, Socket socketTwo) throws IOException {
-        this.playerOne = new Player(socketOne);
-        this.playerTwo = new Player(socketTwo);
+    public Team(Socket socketOne, Socket socketTwo, Card[] cardsOne, Card[] cardsTwo) throws IOException {
+        this.playerOne = new Player(socketOne, cardsOne);
+        this.playerTwo = new Player(socketTwo, cardsTwo);
     }
 
     public Player getPlayerOne() {

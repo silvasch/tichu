@@ -6,16 +6,22 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 
+import src.card.Card;
+
 public class Player {
 
     private Socket socket;
     private PrintWriter out;
     private BufferedReader in;
 
-    public Player(Socket socket) throws IOException {
+    private Card[] cards;
+
+    public Player(Socket socket, Card[] cards) throws IOException {
         this.socket = socket;
         this.out = new PrintWriter(this.socket.getOutputStream(), true);
         this.in = new BufferedReader(new InputStreamReader(this.socket.getInputStream()));
+
+        this.cards = cards;
     }
 
     public void informOfStart() {

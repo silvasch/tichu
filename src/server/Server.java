@@ -3,6 +3,13 @@ package src.server;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.Arrays;
+import java.util.Collections;
+
+import src.card.Card;
+import src.card.NormalCard;
+import src.card.Rank;
+import src.card.Suit;
 
 public class Server {
 
@@ -19,8 +26,10 @@ public class Server {
         Socket socketThree = this.acceptConnection();
         Socket socketFour = this.acceptConnection();
 
-        this.teamOne = new Team(socketOne, socketThree);
-        this.teamTwo = new Team(socketTwo, socketFour);
+        Card[][] hands = this.generateHands();
+
+        this.teamOne = new Team(socketOne, socketThree, hands[0], hands[1]);
+        this.teamTwo = new Team(socketTwo, socketFour, hands[2], hands[3]);
 
         for (Player player : this.getPlayers()) {
             player.informOfStart();
@@ -35,6 +44,28 @@ public class Server {
         Socket socket = this.socket.accept();
         System.out.println("got a connection.");
         return socket;
+    }
+
+    private Card[][] generateHands() {
+        Card[] cards = new Card[] {};
+        for (Suit suit : Suit.values()) {
+            for (Rank rank : Rank.values()) {
+                Card card = new NormalCard(suit, rank);
+                cards = Arrays.copyOf(cards, cards.length + 1);
+                cards[cards.length - 1] = card;
+            }
+        }
+        Collections.shuffle(Arrays.asList(cards));
+
+        Card[][] hands = new Card[][] {};
+
+        int chunkSize = Math.floorDiv(cards.length, 4);
+        for (int i = 0; i < cards.length; i += chunkSize) {
+            hands = Arrays.copyOf(hands, hands.length + 1);
+            hands[hands.length - 1] = Arrays.copyOfRange(cards, i, Math.min(cards.length, i + chunkSize));
+        }
+
+        return hands;
     }
 
     private Player[] getPlayers() {
