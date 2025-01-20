@@ -20,28 +20,22 @@ public abstract class Move implements Serializable {
     public static PartialDeserialization<Move> partialDeserializeMove(String serialized)
             throws DeserializationException {
         if (serialized.startsWith("singlecomb")) {
-            PartialDeserialization<SingleCombination> de =
-                    SingleCombination.partialDeserialize(serialized);
+            PartialDeserialization<SingleCombination> de = SingleCombination.partialDeserialize(serialized);
             return new PartialDeserialization<Move>(de.getResult(), de.getRemainder());
         } else if (serialized.startsWith("paircomb")) {
-            PartialDeserialization<PairCombination> de =
-                    PairCombination.partialDeserialize(serialized);
+            PartialDeserialization<PairCombination> de = PairCombination.partialDeserialize(serialized);
             return new PartialDeserialization<Move>(de.getResult(), de.getRemainder());
         } else if (serialized.startsWith("triplecomb")) {
-            PartialDeserialization<TripleCombination> de =
-                    TripleCombination.partialDeserialize(serialized);
+            PartialDeserialization<TripleCombination> de = TripleCombination.partialDeserialize(serialized);
             return new PartialDeserialization<Move>(de.getResult(), de.getRemainder());
         } else if (serialized.startsWith("fullhousecomb")) {
-            PartialDeserialization<FullHouseCombination> de =
-                    FullHouseCombination.partialDeserialize(serialized);
+            PartialDeserialization<FullHouseCombination> de = FullHouseCombination.partialDeserialize(serialized);
             return new PartialDeserialization<Move>(de.getResult(), de.getRemainder());
         } else if (serialized.startsWith("streetcomb")) {
-            PartialDeserialization<StreetCombination> de =
-                    StreetCombination.partialDeserialize(serialized);
+            PartialDeserialization<StreetCombination> de = StreetCombination.partialDeserialize(serialized);
             return new PartialDeserialization<Move>(de.getResult(), de.getRemainder());
         } else if (serialized.startsWith("staircomb")) {
-            PartialDeserialization<StairCombination> de =
-                    StairCombination.partialDeserialize(serialized);
+            PartialDeserialization<StairCombination> de = StairCombination.partialDeserialize(serialized);
             return new PartialDeserialization<Move>(de.getResult(), de.getRemainder());
         } else {
             throw new DeserializationException(
@@ -127,5 +121,47 @@ public abstract class Move implements Serializable {
 
         // no valid combination has been found
         throw new InvalidCombinationException("invalid combination");
+    }
+
+    public boolean equals(SingleCombination other) {
+        if (this instanceof SingleCombination self) {
+            return self.equals(other);
+        }
+        return false;
+    }
+
+    public boolean equals(PairCombination other) {
+        if (this instanceof PairCombination self) {
+            return self.equals(other);
+        }
+        return false;
+    }
+
+    public boolean equals(TripleCombination other) {
+        if (this instanceof TripleCombination self) {
+            return self.equals(other);
+        }
+        return false;
+    }
+
+    public boolean equals(FullHouseCombination other) {
+        if (this instanceof FullHouseCombination self) {
+            return self.equals(other);
+        }
+        return false;
+    }
+
+    public boolean equals(StreetCombination other) {
+        if (this instanceof StreetCombination self) {
+            return self.equals(other);
+        }
+        return false;
+    }
+
+    public boolean equals(StairCombination other) {
+        if (this instanceof StairCombination self) {
+            return self.equals(other);
+        }
+        return false;
     }
 }

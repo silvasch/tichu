@@ -18,12 +18,6 @@ public class MoveTester {
         assert Move.constructFromCards(new Card[] { new NormalCard(Suit.BLACK, Rank.ACE) })
                 .equals(new SingleCombination(new NormalCard(Suit.BLACK, Rank.ACE)));
 
-        // to test if it works at all, since assert doesn't work for me
-        Move.constructFromCards(
-                new Card[] {
-                        new NormalCard(Suit.BLACK, Rank.SEVEN), new NormalCard(Suit.RED, Rank.SEVEN)
-                });
-
         assert Move.constructFromCards(
                 new Card[] {
                         new NormalCard(Suit.BLACK, Rank.TEN),
