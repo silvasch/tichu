@@ -10,10 +10,8 @@ import src.card.NormalCard;
 import src.card.Rank;
 import src.card.Suit;
 import src.move.Move;
-import src.move.combination.FullHouseCombination;
 import src.move.combination.InvalidCombinationException;
-import src.move.combination.PairCombination;
-import src.move.combination.TripleCombination;
+import src.serde.DeserializationException;
 import src.serde.SerializationException;
 
 public class Server {
@@ -23,7 +21,11 @@ public class Server {
   private Team teamOne;
   private Team teamTwo;
 
-  public Server(int port) throws IOException, InvalidCombinationException, SerializationException {
+  public Server(int port)
+      throws DeserializationException,
+          IOException,
+          InvalidCombinationException,
+          SerializationException {
     this.socket = new ServerSocket(port);
 
     Socket socketOne = this.acceptConnection();
@@ -40,18 +42,11 @@ public class Server {
       player.informOfStart();
     }
 
-    Move move =
-        new FullHouseCombination(
-            new TripleCombination(
-                new NormalCard(Suit.BLACK, Rank.SEVEN),
-                new NormalCard(Suit.RED, Rank.SEVEN),
-                new NormalCard(Suit.BLUE, Rank.SEVEN)),
-            new PairCombination(
-                new NormalCard(Suit.RED, Rank.JACK), new NormalCard(Suit.BLUE, Rank.JACK)));
+    Move move = this.teamOne.getPlayerOne().getMove();
 
-    for (Player player : this.getPlayers()) {
-      player.informOfMove(move, "Player one");
-    }
+    this.teamOne.getPlayerTwo().informOfMove(move, "Your partner");
+    this.teamTwo.getPlayerOne().informOfMove(move, "The opponent to your left");
+    this.teamTwo.getPlayerTwo().informOfMove(move, "The opponent to your right");
 
     this.teamOne.informOfEnd(true, this.teamTwo.getPoints());
     this.teamTwo.informOfEnd(false, this.teamOne.getPoints());

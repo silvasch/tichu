@@ -5,8 +5,10 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.util.StringJoiner;
 import src.card.Card;
 import src.move.Move;
+import src.serde.DeserializationException;
 import src.serde.SerializationException;
 
 public class Player {
@@ -23,6 +25,25 @@ public class Player {
     this.in = new BufferedReader(new InputStreamReader(this.socket.getInputStream()));
 
     this.cards = cards;
+  }
+
+  public Move getMove(String rejection)
+      throws IOException, DeserializationException, SerializationException {
+    this.out.println("get-move");
+
+    StringJoiner joiner = new StringJoiner("|");
+    for (Card card : this.cards) {
+      joiner.add(card.serialize());
+    }
+    this.out.println(joiner);
+    this.out.println(rejection);
+
+    Move move = Move.partialDeserializeMove(this.in.readLine()).deserialize();
+    return move;
+  }
+
+  public Move getMove() throws IOException, DeserializationException, SerializationException {
+    return this.getMove("null");
   }
 
   public void informOfStart() {
