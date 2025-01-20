@@ -1,13 +1,13 @@
 package src.serde;
 
 public class DeserializationException extends Exception {
-    public DeserializationException() {}
+  public DeserializationException() {}
 
-    public DeserializationException(String message) {
-        super(message);
-    }
+  public DeserializationException(String message) {
+    super(message);
+  }
 
-    public DeserializationException(Exception e) {
-        super(e);
-    }
+  public DeserializationException(Exception e) {
+    super(e);
+  }
 }
