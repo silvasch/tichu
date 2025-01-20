@@ -3,6 +3,13 @@ package src.server;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.Arrays;
+import java.util.Collections;
+
+import src.card.Card;
+import src.card.NormalCard;
+import src.card.Rank;
+import src.card.Suit;
 
 public class Server {
 
@@ -19,17 +26,62 @@ public class Server {
         Socket socketThree = this.acceptConnection();
         Socket socketFour = this.acceptConnection();
 
-        this.teamOne = new Team(socketOne, socketThree);
-        this.teamOne = new Team(socketTwo, socketFour);
+        Card[][] hands = this.generateHands();
 
-        while (true) {
+        this.teamOne = new Team(socketOne, socketThree, hands[0], hands[1]);
+        this.teamTwo = new Team(socketTwo, socketFour, hands[2], hands[3]);
+
+        for (Player player : this.getPlayers()) {
+            player.informOfStart();
         }
+
+        this.teamOne.informOfEnd(true, this.teamTwo.getPoints());
+        this.teamTwo.informOfEnd(false, this.teamOne.getPoints());
     }
 
     private Socket acceptConnection() throws IOException {
         Socket socket = this.socket.accept();
         System.out.println("got a connection.");
         return socket;
+    }
+
+    private Card[][] generateHands() {
+        Card[] cards = new Card[] {};
+        for (Suit suit : Suit.values()) {
+            for (Rank rank : Rank.values()) {
+                Card card = new NormalCard(suit, rank);
+                cards = Arrays.copyOf(cards, cards.length + 1);
+                cards[cards.length - 1] = card;
+            }
+        }
+        Collections.shuffle(Arrays.asList(cards));
+
+        Card[][] hands = new Card[][] {};
+
+        int chunkSize = Math.floorDiv(cards.length, 4);
+        for (int i = 0; i < cards.length; i += chunkSize) {
+            hands = Arrays.copyOf(hands, hands.length + 1);
+            hands[hands.length - 1] = Arrays.copyOfRange(cards, i, Math.min(cards.length, i + chunkSize));
+        }
+
+        return hands;
+    }
+
+    private Player[] getPlayers() {
+        return new Player[] {
+                this.teamOne.getPlayerOne(),
+                this.teamOne.getPlayerTwo(),
+                this.teamTwo.getPlayerOne(),
+                this.teamTwo.getPlayerTwo(),
+        };
+    }
+
+    private void close() throws IOException {
+        for (Player player : this.getPlayers()) {
+            player.close();
+        }
+
+        this.socket.close();
     }
 
     public static void main(String[] args) throws IOException {
@@ -45,6 +97,14 @@ public class Server {
 
         System.out.println(String.format("starting the server on '%s'.", port));
 
-        new Server(port);
+        Server server = null;
+        try {
+            server = new Server(port);
+        } catch (Exception e) {
+            if (server != null) {
+                server.close();
+            }
+            e.printStackTrace(System.out);
+        }
     }
 }

@@ -18,7 +18,67 @@ public class Client {
         this.in = new BufferedReader(new InputStreamReader(this.socket.getInputStream()));
         System.out.println("connected.");
 
-        while (true) {
+        boolean doesStart = this.waitForStart();
+        if (!doesStart) {
+            System.out.println("the game was aborted.");
+            return;
+        }
+        System.out.println("the game is starting.");
+
+        mainloop: while (true) {
+            String message = this.in.readLine();
+
+            switch (message) {
+                case "abort":
+                    System.out.println("the game has been aborted");
+                    break mainloop;
+                case "ended":
+                    this.endOfGame();
+                    break mainloop;
+                default: {
+                }
+            }
+        }
+    }
+
+    private boolean waitForStart() throws IOException {
+        String message = this.in.readLine();
+        switch (message) {
+            case "start":
+                return true;
+            case "abort":
+                return false;
+            default:
+                throw new RuntimeException(String.format("received invalid message '%s'.", message));
+        }
+    }
+
+    private void endOfGame() throws IOException {
+        String rawWon = this.in.readLine();
+        String rawPoints = this.in.readLine();
+        String rawEnemyPoints = this.in.readLine();
+
+        boolean won = true;
+        if (rawWon.equals("false")) {
+            won = false;
+        }
+
+        int points = 0;
+        int enemyPoints = 0;
+        try {
+            points = Integer.parseInt(rawPoints);
+            enemyPoints = Integer.parseInt(rawEnemyPoints);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
+        System.out.println("the game has ended.");
+        if (won) {
+            System.out.println(String.format("your team won with %d points.", points));
+            System.out.println(String.format("the other team had %d points.", enemyPoints));
+        } else {
+            System.out.println(String.format("the other team won with %d points.", enemyPoints));
+            System.out.println(String.format("your team had %d points.", points));
         }
     }
 
@@ -47,6 +107,14 @@ public class Client {
 
         System.out.println(String.format("connecting to '%s:%s'.", ip, port));
 
-        new Client(ip, port);
+        Client client = null;
+        try {
+            client = new Client(ip, port);
+        } catch (Exception e) {
+            if (client != null) {
+                client.close();
+            }
+            e.printStackTrace(System.out);
+        }
     }
 }

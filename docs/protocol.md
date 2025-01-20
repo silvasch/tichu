@@ -16,12 +16,20 @@ player has in their hand. Then it waits for the client to send back a move.
 
 ## Requests
 
-**start**
+**start** (implemented)
 
 Inform the client that the game will begin.
 
 ```
 start
+```
+
+**abort** (implemented)
+
+Inform the client that the game was aborted.
+
+```
+abort
 ```
 
 **move-made**
@@ -46,7 +54,7 @@ get-move
 <rejection:String?"null">
 ```
 
-**ended**
+**ended** (implemented)
 
 Inform the player of the game having ended.
 
