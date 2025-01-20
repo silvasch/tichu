@@ -1,14 +1,13 @@
 package src.client;
 
+import src.move.Move;
+import src.serde.DeserializationException;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
-
-import src.move.Move;
-import src.move.combination.SingleCombination;
-import src.serde.DeserializationException;
 
 public class Client {
 
@@ -29,7 +28,8 @@ public class Client {
         }
         System.out.println("the game is starting.");
 
-        mainloop: while (true) {
+        mainloop:
+        while (true) {
             String message = this.in.readLine();
 
             switch (message) {
@@ -41,8 +41,9 @@ public class Client {
                 case "ended":
                     this.endOfGame();
                     break mainloop;
-                default: {
-                }
+                default:
+                    {
+                    }
             }
         }
     }

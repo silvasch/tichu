@@ -24,7 +24,8 @@ public class Server {
     private Team teamOne;
     private Team teamTwo;
 
-    public Server(int port) throws IOException, InvalidCombinationException, SerializationException {
+    public Server(int port)
+            throws IOException, InvalidCombinationException, SerializationException {
         this.socket = new ServerSocket(port);
 
         Socket socketOne = this.acceptConnection();
@@ -41,10 +42,15 @@ public class Server {
             player.informOfStart();
         }
 
-        Move move = new FullHouseCombination(
-                new TripleCombination(new NormalCard(Suit.BLACK, Rank.SEVEN), new NormalCard(Suit.RED, Rank.SEVEN),
-                        new NormalCard(Suit.BLUE, Rank.SEVEN)),
-                new PairCombination(new NormalCard(Suit.RED, Rank.JACK), new NormalCard(Suit.BLUE, Rank.JACK)));
+        Move move =
+                new FullHouseCombination(
+                        new TripleCombination(
+                                new NormalCard(Suit.BLACK, Rank.SEVEN),
+                                new NormalCard(Suit.RED, Rank.SEVEN),
+                                new NormalCard(Suit.BLUE, Rank.SEVEN)),
+                        new PairCombination(
+                                new NormalCard(Suit.RED, Rank.JACK),
+                                new NormalCard(Suit.BLUE, Rank.JACK)));
 
         for (Player player : this.getPlayers()) {
             player.informOfMove(move, "Player one");
@@ -76,7 +82,8 @@ public class Server {
         int chunkSize = Math.floorDiv(cards.length, 4);
         for (int i = 0; i < cards.length; i += chunkSize) {
             hands = Arrays.copyOf(hands, hands.length + 1);
-            hands[hands.length - 1] = Arrays.copyOfRange(cards, i, Math.min(cards.length, i + chunkSize));
+            hands[hands.length - 1] =
+                    Arrays.copyOfRange(cards, i, Math.min(cards.length, i + chunkSize));
         }
 
         return hands;
@@ -84,10 +91,10 @@ public class Server {
 
     private Player[] getPlayers() {
         return new Player[] {
-                this.teamOne.getPlayerOne(),
-                this.teamOne.getPlayerTwo(),
-                this.teamTwo.getPlayerOne(),
-                this.teamTwo.getPlayerTwo(),
+            this.teamOne.getPlayerOne(),
+            this.teamOne.getPlayerTwo(),
+            this.teamTwo.getPlayerOne(),
+            this.teamTwo.getPlayerTwo(),
         };
     }
 
