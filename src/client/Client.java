@@ -90,6 +90,11 @@ public class Client {
       String rawIndices = scanner.nextLine();
       scanner.close();
 
+      if (rawIndices.equals("pass")) {
+        move = null;
+        break;
+      }
+
       for (String rawIndex : rawIndices.split(",")) {
         rawIndex = rawIndex.trim();
         int index = 0;
@@ -109,10 +114,14 @@ public class Client {
         System.out.println(String.format("this is not a valid combination: %s", e));
         continue;
       }
-      break outer;
+      break;
     }
 
-    this.out.println(move.serialize());
+    if (move == null) {
+      this.out.println("pass");
+    } else {
+      this.out.println(move.serialize());
+    }
   }
 
   private boolean waitForStart() throws IOException {
@@ -131,10 +140,14 @@ public class Client {
     String player = this.in.readLine();
     String rawMove = this.in.readLine();
 
-    Move move = Move.partialDeserializeMove(rawMove).deserialize();
+    if (rawMove.equals("pass")) {
+      System.out.println(String.format("%s passed.", player));
+    } else {
+      Move move = Move.partialDeserializeMove(rawMove).deserialize();
 
-    System.out.println(String.format("%s made the following move:", player));
-    System.out.println(move);
+      System.out.println(String.format("%s made the following move:", player));
+      System.out.println(move);
+    }
   }
 
   private void endOfGame() throws IOException {

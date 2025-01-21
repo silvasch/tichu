@@ -38,7 +38,13 @@ public class Player {
     this.out.println(joiner);
     this.out.println(rejection);
 
-    Move move = Move.partialDeserializeMove(this.in.readLine()).deserialize();
+    String serialized = this.in.readLine();
+
+    if (serialized.equals("pass")) {
+      return null;
+    }
+
+    Move move = Move.partialDeserializeMove(serialized).deserialize();
     return move;
   }
 
@@ -53,7 +59,12 @@ public class Player {
   public void informOfMove(Move move, String player) throws SerializationException {
     this.out.println("move-made");
     this.out.println(player);
-    this.out.println(move.serialize());
+
+    if (move == null) {
+      this.out.println("pass");
+    } else {
+      this.out.println(move.serialize());
+    }
   }
 
   public void informOfEnd(boolean won, int points, int enemyPoints) {
