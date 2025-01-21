@@ -11,7 +11,6 @@ import src.card.Rank;
 import src.card.Suit;
 import src.move.Move;
 import src.move.combination.InvalidCombinationException;
-import src.move.combination.SingleCombination;
 import src.serde.DeserializationException;
 import src.serde.SerializationException;
 
@@ -55,16 +54,16 @@ public class Server {
     this.teamTwo.informOfGameStart(
         this.teamOne.getPlayerOne().getName(), this.teamOne.getPlayerTwo().getName());
 
-    Move move = new SingleCombination(new NormalCard(Suit.BLACK, Rank.ACE));
-    this.teamOne.getPlayerOne().informOfMove(move, "foo");
-    this.teamOne.getPlayerTwo().informOfMove(move, "foo");
-    this.teamTwo.getPlayerOne().informOfMove(move, "foo");
-    this.teamTwo.getPlayerTwo().informOfMove(move, "foo");
+    Move move = this.teamOne.getPlayerOne().getMove();
 
-    this.teamOne.getPlayerOne().informOfMove(null, "foo");
-    this.teamOne.getPlayerTwo().informOfMove(null, "foo");
-    this.teamTwo.getPlayerOne().informOfMove(null, "foo");
-    this.teamTwo.getPlayerTwo().informOfMove(null, "foo");
+    this.teamOne.getPlayerTwo().informOfMove(move, "1");
+    this.teamTwo.getPlayerOne().informOfMove(move, "1");
+    this.teamTwo.getPlayerTwo().informOfMove(move, "1");
+
+    this.teamOne.getPlayerOne().informOfMove(null, "1");
+    this.teamOne.getPlayerTwo().informOfMove(null, "1");
+    this.teamTwo.getPlayerOne().informOfMove(null, "1");
+    this.teamTwo.getPlayerTwo().informOfMove(null, "1");
 
     this.teamOne.informOfGameEnd(this.teamTwo.getPoints());
     this.teamTwo.informOfGameEnd(this.teamOne.getPoints());

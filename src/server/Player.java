@@ -8,6 +8,7 @@ import java.net.Socket;
 import java.util.StringJoiner;
 import src.card.Card;
 import src.move.Move;
+import src.serde.DeserializationException;
 import src.serde.SerializationException;
 
 public class Player {
@@ -43,6 +44,36 @@ public class Player {
       joiner.add(card.serialize());
     }
     this.out.println(joiner);
+  }
+
+  public Move getMove() throws DeserializationException, IOException, SerializationException {
+    this.out.println("get-move");
+    StringJoiner joiner = new StringJoiner("|");
+    for (Card card : this.cards) {
+      joiner.add(card.serialize());
+    }
+    this.out.println(joiner);
+
+    Move move = null;
+
+    while (true) {
+      String rawMove = this.in.readLine();
+
+      if (rawMove == "null") {
+        move = null;
+        break;
+      }
+
+      move = Move.partialDeserializeMove(rawMove).deserialize();
+
+      // TODO: verify that the move can be played
+
+      break;
+    }
+
+    this.out.println("ok");
+
+    return move;
   }
 
   public void informOfMove(Move move, String player) throws SerializationException {

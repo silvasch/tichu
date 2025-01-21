@@ -9,6 +9,7 @@ import java.util.Arrays;
 import java.util.Scanner;
 import src.card.Card;
 import src.move.Move;
+import src.move.combination.InvalidCombinationException;
 import src.serde.DeserializationException;
 import src.serde.SerializationException;
 
@@ -41,6 +42,9 @@ public class Client {
     while (true) {
       String message = this.in.readLine();
       switch (message) {
+        case "get-move":
+          this.getMove();
+          break;
         case "new-move":
           this.onNewMove();
           break;
@@ -92,6 +96,102 @@ public class Client {
         throw new RuntimeException(String.format("received invalid message '%s'", message));
     }
     System.out.println();
+  }
+
+  private void getMove() throws DeserializationException, IOException, SerializationException {
+    String rawCards = this.in.readLine();
+    String[] rawCardParts = rawCards.split("\\|");
+
+    Card[] cards = new Card[] {};
+
+    for (String rawCard : rawCardParts) {
+      Card card = Card.partialDeserializeCard(rawCard).deserialize();
+      cards = Arrays.copyOf(cards, cards.length + 1);
+      cards[cards.length - 1] = card;
+    }
+
+    Arrays.sort(cards);
+
+    System.out.println("These are your cards:");
+    for (int i = 0; i < cards.length; i++) {
+      System.out.println(String.format("%02d - %s", i, cards[i]));
+    }
+
+    while (true) {
+      Move move = this.askForMove(cards);
+
+      this.out.println(move.serialize());
+
+      String response = this.in.readLine();
+      if (response.equals("ok")) {
+        System.out.println("Your move was accepted");
+        System.out.println(String.format("You played: %s", move));
+        break;
+      }
+
+      System.out.println("Your move was rejected:");
+      System.out.println(response);
+    }
+
+    System.out.println();
+  }
+
+  private Move askForMove(Card[] cards) {
+    Move move = null;
+
+    System.out.println("Enter your move by choosing the cards you want to play.");
+    System.out.println(
+        "Cards are selected by entering a comma-separated list of numbers that correspond the the"
+            + " cards.");
+    System.out.println("If you want to pass, type 'pass'.");
+
+    prompt:
+    while (true) {
+      System.out.println();
+      System.out.print("> ");
+      String rawIndices = this.scanner.nextLine();
+
+      if (rawIndices.equals("pass")) {
+        move = null;
+        break;
+      }
+
+      String[] rawIndicesParts = rawIndices.split("\\,");
+
+      Card[] cardsToPlay = new Card[] {};
+
+      for (String rawIndex : rawIndicesParts) {
+        int index = -1;
+        try {
+          index = Integer.parseInt(rawIndex);
+        } catch (NumberFormatException e) {
+          System.out.println(String.format("'%s' is not a number.", rawIndex));
+          continue prompt;
+        }
+
+        Card card;
+        try {
+          card = cards[index];
+        } catch (IndexOutOfBoundsException e) {
+          System.out.println(String.format("'%d' is not a card.", index));
+          continue prompt;
+        }
+
+        cardsToPlay = Arrays.copyOf(cardsToPlay, cardsToPlay.length + 1);
+        cardsToPlay[cardsToPlay.length - 1] = card;
+      }
+
+      try {
+        move = Move.constructFromCards(cardsToPlay);
+      } catch (InvalidCombinationException e) {
+        System.out.println(
+            String.format("The cards you entered to not form a valid combination: %s", e));
+      }
+
+      break;
+    }
+
+    return move;
   }
 
   private void onNewMove() throws DeserializationException, IOException {
