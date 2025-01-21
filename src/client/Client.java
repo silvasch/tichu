@@ -120,12 +120,18 @@ public class Client {
     while (true) {
       Move move = this.askForMove(cards);
 
-      this.out.println(move.serialize());
+      if (move == null) {
+        this.out.println("null");
+      } else {
+        this.out.println(move.serialize());
+      }
 
       String response = this.in.readLine();
       if (response.equals("ok")) {
-        System.out.println("Your move was accepted");
-        System.out.println(String.format("You played: %s", move));
+        if (move != null) {
+          System.out.println("Your move was accepted.");
+          System.out.println(String.format("You played: %s.", move));
+        }
         break;
       }
 

@@ -59,7 +59,7 @@ public class Player {
     while (true) {
       String rawMove = this.in.readLine();
 
-      if (rawMove == "null") {
+      if (rawMove.equals("null")) {
         move = null;
         break;
       }
@@ -67,6 +67,7 @@ public class Player {
       move = Move.partialDeserializeMove(rawMove).deserialize();
 
       // TODO: verify that the move can be played
+      // TODO: remove played cards from the hand
 
       break;
     }
