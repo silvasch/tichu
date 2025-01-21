@@ -54,19 +54,25 @@ public class Server {
     this.teamTwo.informOfGameStart(
         this.teamOne.getPlayerOne().getName(), this.teamOne.getPlayerTwo().getName());
 
-    Move move = this.teamOne.getPlayerOne().getMove();
+    int playerIndex = 0;
 
-    this.teamOne.getPlayerTwo().informOfMove(move, "1");
-    this.teamTwo.getPlayerOne().informOfMove(move, "1");
-    this.teamTwo.getPlayerTwo().informOfMove(move, "1");
+    while (true) {
+      Player currentPlayer = this.getPlayers()[playerIndex];
+      Move move = currentPlayer.getMove();
+      for (Player player : this.getPlayers()) { // TODO: do not inform the player that made the move
+        player.informOfMove(move, currentPlayer.getName());
+      }
 
-    this.teamOne.getPlayerOne().informOfMove(null, "1");
-    this.teamOne.getPlayerTwo().informOfMove(null, "1");
-    this.teamTwo.getPlayerOne().informOfMove(null, "1");
-    this.teamTwo.getPlayerTwo().informOfMove(null, "1");
+      playerIndex += 1;
 
-    this.teamOne.informOfGameEnd(this.teamTwo.getPoints());
-    this.teamTwo.informOfGameEnd(this.teamOne.getPoints());
+      if (playerIndex == 4) { // TODO: correct gameloop
+        playerIndex = 0;
+      }
+    }
+
+    // TODO: implement this correctly once the game can end
+    // this.teamOne.informOfGameEnd(this.teamTwo.getPoints());
+    // this.teamTwo.informOfGameEnd(this.teamOne.getPoints());
   }
 
   private Card[][] generateHands() {
@@ -108,6 +114,15 @@ public class Server {
     this.teamOne.close();
     this.teamTwo.close();
     this.socket.close();
+  }
+
+  private Player[] getPlayers() {
+    return new Player[] {
+      this.teamOne.getPlayerOne(),
+      this.teamOne.getPlayerTwo(),
+      this.teamTwo.getPlayerOne(),
+      this.teamTwo.getPlayerTwo(),
+    };
   }
 
   public static void main(String[] args) throws IOException {

@@ -5,9 +5,11 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.util.Arrays;
 import java.util.StringJoiner;
 import src.card.Card;
 import src.move.Move;
+import src.move.combination.Combination;
 import src.serde.DeserializationException;
 import src.serde.SerializationException;
 
@@ -67,7 +69,20 @@ public class Player {
       move = Move.partialDeserializeMove(rawMove).deserialize();
 
       // TODO: verify that the move can be played
-      // TODO: remove played cards from the hand
+
+      // remove the played cards from the hand
+      if (move != null && move instanceof Combination combination) {
+        Card[] newCards = new Card[] {};
+        for (Card card : this.cards) {
+          for (Card playedCard : combination.getCards()) {
+            if (!card.equals(playedCard)) {
+              newCards = Arrays.copyOf(newCards, newCards.length + 1);
+              newCards[newCards.length - 1] = card;
+            }
+          }
+        }
+        this.cards = newCards;
+      }
 
       break;
     }
