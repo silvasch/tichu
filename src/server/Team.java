@@ -12,8 +12,21 @@ public class Team {
     this.playerTwo = playerTwo;
   }
 
+  public void informOfGameStart(String opponentOneName, String opponentTwoName) {
+    this.playerOne.informOfGameStart(this.playerTwo.getName(), opponentOneName, opponentTwoName);
+    this.playerTwo.informOfGameStart(this.playerOne.getName(), opponentOneName, opponentTwoName);
+  }
+
   public void close() throws IOException {
     this.playerOne.close();
     this.playerTwo.close();
+  }
+
+  public Player getPlayerOne() {
+    return this.playerOne;
+  }
+
+  public Player getPlayerTwo() {
+    return this.playerTwo;
   }
 }

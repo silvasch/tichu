@@ -28,8 +28,30 @@ public class Client {
     if (name == null) {
       System.out.print("Enter your name: ");
       name = this.scanner.nextLine();
+      System.out.println();
     }
     this.out.println(name);
+
+    this.waitForGameStart();
+  }
+
+  public void waitForGameStart() throws IOException {
+    String message = this.in.readLine();
+    switch (message) {
+      case "start":
+        String teammateName = this.in.readLine();
+        String opponentOneName = this.in.readLine();
+        String opponentTwoName = this.in.readLine();
+        System.out.println(
+            String.format(
+                "The game is starting. Your teammate is '%s', your opponents are '%s' and '%s'.",
+                teammateName, opponentOneName, opponentTwoName));
+        break;
+      case "abort":
+        break;
+      default:
+        throw new RuntimeException(String.format("received invalid message '%s'", message));
+    }
   }
 
   public void close() throws IOException {

@@ -22,6 +22,14 @@ public class Player {
     this.name = this.in.readLine();
   }
 
+  public void informOfGameStart(
+      String teammateName, String opponentOneName, String opponentTwoName) {
+    this.out.println("start");
+    this.out.println(teammateName);
+    this.out.println(opponentOneName);
+    this.out.println(opponentTwoName);
+  }
+
   public void close() throws IOException {
     this.in.close();
     this.out.close();

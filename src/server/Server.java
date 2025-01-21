@@ -39,6 +39,11 @@ public class Server {
 
     this.teamOne = new Team(playerOne, playerTwo);
     this.teamTwo = new Team(playerThree, playerFour);
+
+    this.teamOne.informOfGameStart(
+        this.teamTwo.getPlayerOne().getName(), this.teamTwo.getPlayerTwo().getName());
+    this.teamTwo.informOfGameStart(
+        this.teamOne.getPlayerOne().getName(), this.teamOne.getPlayerTwo().getName());
   }
 
   private Socket acceptConnection() throws IOException {
