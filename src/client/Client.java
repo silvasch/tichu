@@ -33,6 +33,20 @@ public class Client {
     this.out.println(name);
 
     this.waitForGameStart();
+
+    mainloop:
+    while (true) {
+      String message = this.in.readLine();
+      switch (message) {
+        case "end":
+          this.onGameEnd();
+          break mainloop;
+        case "abort":
+          throw new RuntimeException("the game was aborted");
+        default:
+          throw new RuntimeException(String.format("received invalid message '%s'", message));
+      }
+    }
   }
 
   public void waitForGameStart() throws IOException {
@@ -48,10 +62,37 @@ public class Client {
                 teammateName, opponentOneName, opponentTwoName));
         break;
       case "abort":
-        break;
+        throw new RuntimeException("the game was aborted");
       default:
         throw new RuntimeException(String.format("received invalid message '%s'", message));
     }
+    System.out.println();
+  }
+
+  public void onGameEnd() throws IOException {
+    String rawPoints = this.in.readLine();
+    String rawOpponentPoints = this.in.readLine();
+
+    int points = 0;
+    int opponentPoints = 0;
+    try {
+      points = Integer.parseInt(rawPoints);
+      opponentPoints = Integer.parseInt(rawOpponentPoints);
+    } catch (NumberFormatException e) {
+      throw new RuntimeException(e);
+    }
+
+    System.out.println("The game is over.");
+    if (points < opponentPoints) {
+      System.out.println("You lost!");
+    } else if (points == opponentPoints) {
+      System.out.println("It was a draw!");
+    } else {
+      System.out.println("You won!");
+    }
+
+    System.out.println(
+        String.format("You had %d points, while the opponent had %d.", points, opponentPoints));
   }
 
   public void close() throws IOException {

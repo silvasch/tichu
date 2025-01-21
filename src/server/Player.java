@@ -30,6 +30,12 @@ public class Player {
     this.out.println(opponentTwoName);
   }
 
+  public void informOfGameEnd(int points, int opponentPoints) {
+    this.out.println("end");
+    this.out.println(points);
+    this.out.println(opponentPoints);
+  }
+
   public void close() throws IOException {
     this.in.close();
     this.out.close();
