@@ -3,13 +3,6 @@ package src.server;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.Arrays;
-import java.util.Collections;
-import src.card.Card;
-import src.card.NormalCard;
-import src.card.Rank;
-import src.card.Suit;
-import src.move.Move;
 import src.move.combination.InvalidCombinationException;
 import src.serde.DeserializationException;
 import src.serde.SerializationException;
@@ -33,67 +26,24 @@ public class Server {
     Socket socketThree = this.acceptConnection();
     Socket socketFour = this.acceptConnection();
 
-    Card[][] hands = this.generateHands();
+    Player playerOne = new Player(socketOne);
+    Player playerTwo = new Player(socketTwo);
+    Player playerThree = new Player(socketThree);
+    Player playerFour = new Player(socketFour);
 
-    this.teamOne = new Team(socketOne, socketThree, hands[0], hands[1]);
-    this.teamTwo = new Team(socketTwo, socketFour, hands[2], hands[3]);
-
-    for (Player player : this.getPlayers()) {
-      player.informOfStart();
-    }
-
-    Move move = this.teamOne.getPlayerOne().getMove();
-
-    this.teamOne.getPlayerTwo().informOfMove(move, "Your partner");
-    this.teamTwo.getPlayerOne().informOfMove(move, "The opponent to your left");
-    this.teamTwo.getPlayerTwo().informOfMove(move, "The opponent to your right");
-
-    this.teamOne.informOfEnd(true, this.teamTwo.getPoints());
-    this.teamTwo.informOfEnd(false, this.teamOne.getPoints());
+    this.teamOne = new Team(playerOne, playerTwo);
+    this.teamTwo = new Team(playerThree, playerFour);
   }
 
   private Socket acceptConnection() throws IOException {
     Socket socket = this.socket.accept();
-    System.out.println("got a connection.");
+    System.out.println("got a connection");
     return socket;
   }
 
-  private Card[][] generateHands() {
-    Card[] cards = new Card[] {};
-    for (Suit suit : Suit.values()) {
-      for (Rank rank : Rank.values()) {
-        Card card = new NormalCard(suit, rank);
-        cards = Arrays.copyOf(cards, cards.length + 1);
-        cards[cards.length - 1] = card;
-      }
-    }
-    Collections.shuffle(Arrays.asList(cards));
-
-    Card[][] hands = new Card[][] {};
-
-    int chunkSize = Math.floorDiv(cards.length, 4);
-    for (int i = 0; i < cards.length; i += chunkSize) {
-      hands = Arrays.copyOf(hands, hands.length + 1);
-      hands[hands.length - 1] = Arrays.copyOfRange(cards, i, Math.min(cards.length, i + chunkSize));
-    }
-
-    return hands;
-  }
-
-  private Player[] getPlayers() {
-    return new Player[] {
-      this.teamOne.getPlayerOne(),
-      this.teamOne.getPlayerTwo(),
-      this.teamTwo.getPlayerOne(),
-      this.teamTwo.getPlayerTwo(),
-    };
-  }
-
   private void close() throws IOException {
-    for (Player player : this.getPlayers()) {
-      player.close();
-    }
-
+    this.teamOne.close();
+    this.teamTwo.close();
     this.socket.close();
   }
 

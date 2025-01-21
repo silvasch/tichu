@@ -22,13 +22,16 @@ run-client *ARGS:
 tmux-session IP="localhost" PORT="3000":
     tmux new-session -d -s "Tichu" -n "server" "just run-server {{PORT}}"
     tmux set-option remain-on-exit on
-    sleep 3
+    sleep 1
     tmux new-window -n "client one" "just run-client {{IP}} {{PORT}}"
     tmux set-option remain-on-exit on
+    sleep 1
     tmux new-window -n "client two" "just run-client {{IP}} {{PORT}}"
     tmux set-option remain-on-exit on
+    sleep 1
     tmux new-window -n "client three" "just run-client {{IP}} {{PORT}}"
     tmux set-option remain-on-exit on
+    sleep 1
     tmux new-window -n "client four" "just run-client {{IP}} {{PORT}}"
     tmux set-option remain-on-exit on
     tmux attach
