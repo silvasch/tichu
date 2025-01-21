@@ -22,14 +22,20 @@ public class Server {
     this.socket = new ServerSocket(port);
 
     Socket socketOne = this.acceptConnection();
-    Socket socketTwo = this.acceptConnection();
-    Socket socketThree = this.acceptConnection();
-    Socket socketFour = this.acceptConnection();
-
     Player playerOne = new Player(socketOne);
+    System.out.println(String.format("'%s' connected!", playerOne.getName()));
+
+    Socket socketTwo = this.acceptConnection();
     Player playerTwo = new Player(socketTwo);
+    System.out.println(String.format("'%s' connected!", playerTwo.getName()));
+
+    Socket socketThree = this.acceptConnection();
     Player playerThree = new Player(socketThree);
+    System.out.println(String.format("'%s' connected!", playerThree.getName()));
+
+    Socket socketFour = this.acceptConnection();
     Player playerFour = new Player(socketFour);
+    System.out.println(String.format("'%s' connected!", playerFour.getName()));
 
     this.teamOne = new Team(playerOne, playerTwo);
     this.teamTwo = new Team(playerThree, playerFour);
@@ -37,7 +43,6 @@ public class Server {
 
   private Socket acceptConnection() throws IOException {
     Socket socket = this.socket.accept();
-    System.out.println("got a connection");
     return socket;
   }
 

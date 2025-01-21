@@ -12,15 +12,23 @@ public class Player {
   private PrintWriter out;
   private BufferedReader in;
 
+  private String name;
+
   public Player(Socket socket) throws IOException {
     this.socket = socket;
     this.out = new PrintWriter(this.socket.getOutputStream(), true);
     this.in = new BufferedReader(new InputStreamReader(this.socket.getInputStream()));
+
+    this.name = this.in.readLine();
   }
 
   public void close() throws IOException {
     this.in.close();
     this.out.close();
     this.socket.close();
+  }
+
+  public String getName() {
+    return this.name;
   }
 }
