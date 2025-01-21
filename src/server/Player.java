@@ -5,6 +5,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.util.StringJoiner;
+import src.card.Card;
 import src.move.Move;
 import src.serde.SerializationException;
 
@@ -16,20 +18,31 @@ public class Player {
 
   private String name;
 
-  public Player(Socket socket) throws IOException {
+  private Card[] cards;
+
+  public Player(Socket socket, Card[] cards) throws IOException {
     this.socket = socket;
     this.out = new PrintWriter(this.socket.getOutputStream(), true);
     this.in = new BufferedReader(new InputStreamReader(this.socket.getInputStream()));
 
     this.name = this.in.readLine();
+
+    this.cards = cards;
   }
 
-  public void informOfGameStart(
-      String teammateName, String opponentOneName, String opponentTwoName) {
+  public void informOfGameStart(String teammateName, String opponentOneName, String opponentTwoName)
+      throws SerializationException {
     this.out.println("start");
+
     this.out.println(teammateName);
     this.out.println(opponentOneName);
     this.out.println(opponentTwoName);
+
+    StringJoiner joiner = new StringJoiner("|");
+    for (Card card : this.cards) {
+      joiner.add(card.serialize());
+    }
+    this.out.println(joiner);
   }
 
   public void informOfMove(Move move, String player) throws SerializationException {

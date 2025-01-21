@@ -3,6 +3,9 @@ package src.server;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.Arrays;
+import java.util.Collections;
+import src.card.Card;
 import src.card.NormalCard;
 import src.card.Rank;
 import src.card.Suit;
@@ -26,20 +29,22 @@ public class Server {
           SerializationException {
     this.socket = new ServerSocket(port);
 
+    Card[][] hands = this.generateHands();
+
     Socket socketOne = this.acceptConnection();
-    Player playerOne = new Player(socketOne);
+    Player playerOne = new Player(socketOne, hands[0]);
     System.out.println(String.format("'%s' connected!", playerOne.getName()));
 
     Socket socketTwo = this.acceptConnection();
-    Player playerTwo = new Player(socketTwo);
+    Player playerTwo = new Player(socketTwo, hands[1]);
     System.out.println(String.format("'%s' connected!", playerTwo.getName()));
 
     Socket socketThree = this.acceptConnection();
-    Player playerThree = new Player(socketThree);
+    Player playerThree = new Player(socketThree, hands[2]);
     System.out.println(String.format("'%s' connected!", playerThree.getName()));
 
     Socket socketFour = this.acceptConnection();
-    Player playerFour = new Player(socketFour);
+    Player playerFour = new Player(socketFour, hands[3]);
     System.out.println(String.format("'%s' connected!", playerFour.getName()));
 
     this.teamOne = new Team(playerOne, playerTwo);
@@ -63,6 +68,36 @@ public class Server {
 
     this.teamOne.informOfGameEnd(this.teamTwo.getPoints());
     this.teamTwo.informOfGameEnd(this.teamOne.getPoints());
+  }
+
+  private Card[][] generateHands() {
+    Card[] cards = this.generateCards();
+
+    Card[][] hands = new Card[][] {};
+
+    int chunkSize = Math.floorDiv(cards.length, 4);
+    for (int i = 0; i < cards.length; i += chunkSize) {
+      hands = Arrays.copyOf(hands, hands.length + 1);
+      hands[hands.length - 1] = Arrays.copyOfRange(cards, i, Math.min(cards.length, i + chunkSize));
+    }
+
+    return hands;
+  }
+
+  private Card[] generateCards() {
+    Card[] cards = new Card[] {};
+
+    for (Rank rank : Rank.values()) {
+      for (Suit suit : Suit.values()) {
+        Card card = new NormalCard(suit, rank);
+        cards = Arrays.copyOf(cards, cards.length + 1);
+        cards[cards.length - 1] = card;
+      }
+    }
+
+    Collections.shuffle(Arrays.asList(cards));
+
+    return cards;
   }
 
   private Socket acceptConnection() throws IOException {

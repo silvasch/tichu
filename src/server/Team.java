@@ -1,6 +1,7 @@
 package src.server;
 
 import java.io.IOException;
+import src.serde.SerializationException;
 
 public class Team {
 
@@ -16,7 +17,8 @@ public class Team {
     this.points = 0;
   }
 
-  public void informOfGameStart(String opponentOneName, String opponentTwoName) {
+  public void informOfGameStart(String opponentOneName, String opponentTwoName)
+      throws SerializationException {
     this.playerOne.informOfGameStart(this.playerTwo.getName(), opponentOneName, opponentTwoName);
     this.playerTwo.informOfGameStart(this.playerOne.getName(), opponentOneName, opponentTwoName);
   }

@@ -5,7 +5,9 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.util.Arrays;
 import java.util.Scanner;
+import src.card.Card;
 import src.move.Move;
 import src.serde.DeserializationException;
 import src.serde.SerializationException;
@@ -53,17 +55,36 @@ public class Client {
     }
   }
 
-  private void waitForGameStart() throws IOException {
+  private void waitForGameStart() throws DeserializationException, IOException {
     String message = this.in.readLine();
     switch (message) {
       case "start":
         String teammateName = this.in.readLine();
         String opponentOneName = this.in.readLine();
         String opponentTwoName = this.in.readLine();
+
+        String rawCards = this.in.readLine();
+        String[] rawCardsParts = rawCards.split("\\|");
+
+        Card[] cards = new Card[] {};
+
+        for (String rawCard : rawCardsParts) {
+          Card card = Card.partialDeserializeCard(rawCard).deserialize();
+          cards = Arrays.copyOf(cards, cards.length + 1);
+          cards[cards.length - 1] = card;
+        }
+
+        Arrays.sort(cards);
+
         System.out.println(
             String.format(
                 "The game is starting. Your teammate is '%s', your opponents are '%s' and '%s'.",
                 teammateName, opponentOneName, opponentTwoName));
+        System.out.println("This is your hand:");
+        for (Card card : cards) {
+          System.out.println(card);
+        }
+
         break;
       case "abort":
         throw new RuntimeException("the game was aborted");
