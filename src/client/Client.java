@@ -6,6 +6,7 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.Scanner;
+import src.move.Move;
 import src.serde.DeserializationException;
 import src.serde.SerializationException;
 
@@ -38,6 +39,9 @@ public class Client {
     while (true) {
       String message = this.in.readLine();
       switch (message) {
+        case "new-move":
+          this.onNewMove();
+          break;
         case "end":
           this.onGameEnd();
           break mainloop;
@@ -49,7 +53,7 @@ public class Client {
     }
   }
 
-  public void waitForGameStart() throws IOException {
+  private void waitForGameStart() throws IOException {
     String message = this.in.readLine();
     switch (message) {
       case "start":
@@ -69,7 +73,22 @@ public class Client {
     System.out.println();
   }
 
-  public void onGameEnd() throws IOException {
+  private void onNewMove() throws DeserializationException, IOException {
+    String player = this.in.readLine();
+    String rawMove = this.in.readLine();
+
+    System.out.println(String.format("'%s' made their move:", player));
+    if (rawMove.equals("null")) {
+      System.out.println("They passed.");
+    } else {
+      Move move = Move.partialDeserializeMove(rawMove).deserialize();
+      System.out.println(move);
+    }
+
+    System.out.println();
+  }
+
+  private void onGameEnd() throws IOException {
     String rawPoints = this.in.readLine();
     String rawOpponentPoints = this.in.readLine();
 

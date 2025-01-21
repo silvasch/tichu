@@ -5,6 +5,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
+import src.move.Move;
+import src.serde.SerializationException;
 
 public class Player {
 
@@ -28,6 +30,17 @@ public class Player {
     this.out.println(teammateName);
     this.out.println(opponentOneName);
     this.out.println(opponentTwoName);
+  }
+
+  public void informOfMove(Move move, String player) throws SerializationException {
+    String serializedMove = "null";
+    if (move != null) {
+      serializedMove = move.serialize();
+    }
+
+    this.out.println("new-move");
+    this.out.println(player);
+    this.out.println(serializedMove);
   }
 
   public void informOfGameEnd(int points, int opponentPoints) {
