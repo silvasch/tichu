@@ -3,12 +3,11 @@ package src.move.combination;
 import src.card.Card;
 import src.card.NormalCard;
 import src.card.Rank;
-import src.move.Move;
 import src.serde.DeserializationException;
 import src.serde.PartialDeserialization;
 import src.serde.SerializationException;
 
-public class TripleCombination extends Move implements Comparable<TripleCombination> {
+public class TripleCombination extends Combination implements Comparable<TripleCombination> {
 
   private Card cardOne;
   private Card cardTwo;
@@ -103,5 +102,11 @@ public class TripleCombination extends Move implements Comparable<TripleCombinat
 
   public Card getCardThree() {
     return this.cardThree;
+  }
+
+  public Card[] getCards() {
+    return new Card[] {
+      this.cardOne, this.cardTwo, this.cardThree,
+    };
   }
 }

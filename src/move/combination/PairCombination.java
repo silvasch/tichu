@@ -2,12 +2,11 @@ package src.move.combination;
 
 import src.card.Card;
 import src.card.NormalCard;
-import src.move.Move;
 import src.serde.DeserializationException;
 import src.serde.PartialDeserialization;
 import src.serde.SerializationException;
 
-public class PairCombination extends Move implements Comparable<PairCombination> {
+public class PairCombination extends Combination implements Comparable<PairCombination> {
 
   private Card cardOne;
   private Card cardTwo;
@@ -88,5 +87,11 @@ public class PairCombination extends Move implements Comparable<PairCombination>
 
   public Card getCardTwo() {
     return this.cardTwo;
+  }
+
+  public Card[] getCards() {
+    return new Card[] {
+      this.cardOne, this.cardTwo,
+    };
   }
 }

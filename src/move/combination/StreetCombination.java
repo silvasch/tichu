@@ -102,4 +102,8 @@ public class StreetCombination extends Combination {
     }
     return String.format("Street: %s", joiner.toString());
   }
+
+  public Card[] getCards() {
+    return this.cards;
+  }
 }
