@@ -78,13 +78,15 @@ public class Player {
       // remove the played cards from the hand
       if (move != null && move instanceof Combination combination) {
         Card[] newCards = new Card[] {};
+        outer:
         for (Card card : this.cards) {
           for (Card playedCard : combination.getCards()) {
-            if (!card.equals(playedCard)) {
-              newCards = Arrays.copyOf(newCards, newCards.length + 1);
-              newCards[newCards.length - 1] = card;
+            if (card.equals(playedCard)) {
+              continue outer;
             }
           }
+          newCards = Arrays.copyOf(newCards, newCards.length + 1);
+          newCards[newCards.length - 1] = card;
         }
         this.cards = newCards;
       }

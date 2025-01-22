@@ -166,6 +166,8 @@ public class Client {
 
       Card[] cardsToPlay = new Card[] {};
 
+      // TODO: verify that no index was entered twice
+
       for (String rawIndex : rawIndicesParts) {
         int index = -1;
         try {
