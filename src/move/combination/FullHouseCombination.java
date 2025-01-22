@@ -1,11 +1,12 @@
 package src.move.combination;
 
-import src.move.Move;
+import src.card.Card;
+import src.card.Rank;
 import src.serde.DeserializationException;
 import src.serde.PartialDeserialization;
 import src.serde.SerializationException;
 
-public class FullHouseCombination extends Move implements Comparable<FullHouseCombination> {
+public class FullHouseCombination extends Combination implements Comparable<FullHouseCombination> {
   private TripleCombination triple;
   private PairCombination pair;
 
@@ -65,5 +66,19 @@ public class FullHouseCombination extends Move implements Comparable<FullHouseCo
 
   public PairCombination getPair() {
     return this.pair;
+  }
+
+  public Rank getRank() {
+    return this.triple.getRank();
+  }
+
+  public Card[] getCards() {
+    return new Card[] {
+      this.triple.getCardOne(),
+      this.triple.getCardTwo(),
+      this.triple.getCardThree(),
+      this.pair.getCardOne(),
+      this.pair.getCardTwo(),
+    };
   }
 }

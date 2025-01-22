@@ -19,179 +19,259 @@ public class Client {
   private PrintWriter out;
   private BufferedReader in;
 
-  public Client(String ip, int port)
+  private Scanner scanner;
+
+  public Client(String ip, int port, String name)
       throws IOException, DeserializationException, SerializationException {
     this.socket = new Socket(ip, port);
     this.out = new PrintWriter(this.socket.getOutputStream(), true);
     this.in = new BufferedReader(new InputStreamReader(this.socket.getInputStream()));
-    System.out.println("connected.");
 
-    boolean doesStart = this.waitForStart();
-    if (!doesStart) {
-      System.out.println("the game was aborted.");
-      return;
+    this.scanner = new Scanner(System.in);
+
+    if (name == null) {
+      System.out.print("Enter your name: ");
+      name = this.scanner.nextLine();
+      System.out.println();
     }
-    System.out.println("the game is starting.");
+    this.out.println(name);
+
+    this.waitForGameStart();
 
     mainloop:
     while (true) {
       String message = this.in.readLine();
-
       switch (message) {
+        case "round-end":
+          String playerName = this.in.readLine();
+          System.out.println("Player '" + playerName + "' won the round.");
+          System.out.println();
+          break;
+        case "skip":
+          System.out.println("You were skipped because you have no cards left.");
+          break;
         case "get-move":
           this.getMove();
           break;
-        case "move-made":
-          this.moveMade();
+        case "new-move":
+          this.onNewMove();
           break;
+        case "end":
+          this.onGameEnd();
+          break mainloop;
         case "abort":
-          System.out.println("the game has been aborted");
-          break mainloop;
-        case "ended":
-          this.endOfGame();
-          break mainloop;
+          throw new RuntimeException("the game was aborted");
         default:
-          {
-          }
+          throw new RuntimeException(String.format("received invalid message '%s'", message));
       }
     }
   }
 
-  private void getMove() throws IOException, DeserializationException, SerializationException {
-    String rawCards = this.in.readLine();
-    String rejection = this.in.readLine();
+  private void waitForGameStart() throws DeserializationException, IOException {
+    String message = this.in.readLine();
+    switch (message) {
+      case "start":
+        String teammateName = this.in.readLine();
+        String opponentOneName = this.in.readLine();
+        String opponentTwoName = this.in.readLine();
 
-    if (!rejection.equals("null")) {
-      System.out.println(String.format("your move was rejected: %s", rejection));
-    } else {
-      System.out.println("it's your turn!");
+        Card[] cards = new Card[] {};
+
+        String rawCards = this.in.readLine();
+        if (!rawCards.equals("")) {
+          String[] rawCardsParts = rawCards.split("\\|");
+
+          for (String rawCard : rawCardsParts) {
+            Card card = Card.partialDeserializeCard(rawCard).deserialize();
+            cards = Arrays.copyOf(cards, cards.length + 1);
+            cards[cards.length - 1] = card;
+          }
+
+          Arrays.sort(cards);
+        }
+
+        System.out.println(
+            String.format(
+                "The game is starting. Your teammate is '%s', your opponents are '%s' and '%s'.",
+                teammateName, opponentOneName, opponentTwoName));
+        System.out.println("This is your hand:");
+        for (Card card : cards) {
+          System.out.println(card);
+        }
+
+        break;
+      case "abort":
+        throw new RuntimeException("the game was aborted");
+      default:
+        throw new RuntimeException(String.format("received invalid message '%s'", message));
     }
+    System.out.println();
+  }
 
-    String[] cardsParts = rawCards.split("\\|");
+  private void getMove() throws DeserializationException, IOException, SerializationException {
+    String rawCards = this.in.readLine();
+    String[] rawCardParts = rawCards.split("\\|");
+
     Card[] cards = new Card[] {};
-    for (String rawCard : cardsParts) {
+
+    for (String rawCard : rawCardParts) {
       Card card = Card.partialDeserializeCard(rawCard).deserialize();
       cards = Arrays.copyOf(cards, cards.length + 1);
       cards[cards.length - 1] = card;
     }
 
+    Arrays.sort(cards);
+
+    System.out.println("It's your turn:");
+
+    System.out.println("These are your cards:");
     for (int i = 0; i < cards.length; i++) {
-      System.out.println(String.format("%02d -> %s", i, cards[i]));
+      System.out.println(String.format("%02d - %s", i, cards[i]));
     }
 
-    Move move;
-
-    outer:
     while (true) {
-      Card[] cardsToPlay = new Card[] {};
+      Move move = this.askForMove(cards);
 
-      Scanner scanner = new Scanner(System.in);
+      if (move == null) {
+        this.out.println("null");
+      } else {
+        this.out.println(move.serialize());
+      }
+
+      String response = this.in.readLine();
+      if (response.equals("ok")) {
+        if (move != null) {
+          System.out.println("Your move was accepted.");
+          System.out.println(String.format("You played: %s.", move));
+        }
+        break;
+      }
+
+      System.out.println("Your move was rejected:");
+      System.out.println(response);
+    }
+
+    System.out.println();
+  }
+
+  private Move askForMove(Card[] cards) {
+    Move move = null;
+
+    System.out.println("Enter your move by choosing the cards you want to play.");
+    System.out.println(
+        "Cards are selected by entering a comma-separated list of numbers that correspond the the"
+            + " cards.");
+    System.out.println("If you want to pass, type 'pass'.");
+
+    prompt:
+    while (true) {
+      System.out.println();
       System.out.print("> ");
-      String rawIndices = scanner.nextLine();
-      scanner.close();
+      String rawIndices = this.scanner.nextLine();
 
       if (rawIndices.equals("pass")) {
         move = null;
         break;
       }
 
-      for (String rawIndex : rawIndices.split(",")) {
-        rawIndex = rawIndex.trim();
-        int index = 0;
+      String[] rawIndicesParts = rawIndices.split("\\,");
+
+      Card[] cardsToPlay = new Card[] {};
+
+      // TODO: verify that no index was entered twice
+
+      for (String rawIndex : rawIndicesParts) {
+        int index = -1;
         try {
           index = Integer.parseInt(rawIndex);
         } catch (NumberFormatException e) {
-          System.out.println(String.format("%s is not a valid number"));
-          continue outer;
+          System.out.println(String.format("'%s' is not a number.", rawIndex));
+          continue prompt;
         }
+
+        Card card;
+        try {
+          card = cards[index];
+        } catch (IndexOutOfBoundsException e) {
+          System.out.println(String.format("'%d' is not a card.", index));
+          continue prompt;
+        }
+
         cardsToPlay = Arrays.copyOf(cardsToPlay, cardsToPlay.length + 1);
-        cardsToPlay[cardsToPlay.length - 1] = cards[index];
+        cardsToPlay[cardsToPlay.length - 1] = card;
       }
 
       try {
         move = Move.constructFromCards(cardsToPlay);
       } catch (InvalidCombinationException e) {
-        System.out.println(String.format("this is not a valid combination: %s", e));
-        continue;
+        System.out.println(
+            String.format("The cards you entered to not form a valid combination: %s", e));
       }
+
       break;
     }
 
-    if (move == null) {
-      this.out.println("pass");
-    } else {
-      this.out.println(move.serialize());
-    }
+    return move;
   }
 
-  private boolean waitForStart() throws IOException {
-    String message = this.in.readLine();
-    switch (message) {
-      case "start":
-        return true;
-      case "abort":
-        return false;
-      default:
-        throw new RuntimeException(String.format("received invalid message '%s'.", message));
-    }
-  }
-
-  private void moveMade() throws IOException, DeserializationException {
+  private void onNewMove() throws DeserializationException, IOException {
     String player = this.in.readLine();
     String rawMove = this.in.readLine();
 
-    if (rawMove.equals("pass")) {
-      System.out.println(String.format("%s passed.", player));
+    System.out.println(String.format("'%s' made their move:", player));
+    if (rawMove.equals("null")) {
+      System.out.println("They passed.");
     } else {
       Move move = Move.partialDeserializeMove(rawMove).deserialize();
-
-      System.out.println(String.format("%s made the following move:", player));
       System.out.println(move);
     }
+
+    System.out.println();
   }
 
-  private void endOfGame() throws IOException {
-    String rawWon = this.in.readLine();
+  private void onGameEnd() throws IOException {
     String rawPoints = this.in.readLine();
-    String rawEnemyPoints = this.in.readLine();
-
-    boolean won = true;
-    if (rawWon.equals("false")) {
-      won = false;
-    }
+    String rawOpponentPoints = this.in.readLine();
 
     int points = 0;
-    int enemyPoints = 0;
+    int opponentPoints = 0;
     try {
       points = Integer.parseInt(rawPoints);
-      enemyPoints = Integer.parseInt(rawEnemyPoints);
-    } catch (Exception e) {
+      opponentPoints = Integer.parseInt(rawOpponentPoints);
+    } catch (NumberFormatException e) {
       throw new RuntimeException(e);
     }
 
-    System.out.println("the game has ended.");
-    if (won) {
-      System.out.println(String.format("your team won with %d points.", points));
-      System.out.println(String.format("the other team had %d points.", enemyPoints));
+    System.out.println("The game is over.");
+    if (points < opponentPoints) {
+      System.out.println("You lost!");
+    } else if (points == opponentPoints) {
+      System.out.println("It was a draw!");
     } else {
-      System.out.println(String.format("the other team won with %d points.", enemyPoints));
-      System.out.println(String.format("your team had %d points.", points));
+      System.out.println("You won!");
     }
+
+    System.out.println(
+        String.format("You had %d points, while the opponent had %d.", points, opponentPoints));
   }
 
   public void close() throws IOException {
     this.in.close();
     this.out.close();
     this.socket.close();
+
+    this.scanner.close();
   }
 
   public static void main(String[] args) throws IOException {
     String ip = null;
     int port = -1;
+    String name = null;
 
     try {
       ip = args[0];
       port = Integer.parseInt(args[1]);
+      name = args[2];
     } catch (IndexOutOfBoundsException e) {
       if (ip == null) {
         ip = "localhost";
@@ -202,11 +282,9 @@ public class Client {
       }
     }
 
-    System.out.println(String.format("connecting to '%s:%s'.", ip, port));
-
     Client client = null;
     try {
-      client = new Client(ip, port);
+      client = new Client(ip, port, name);
     } catch (Exception e) {
       if (client != null) {
         client.close();

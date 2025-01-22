@@ -105,4 +105,20 @@ public class StairCombination extends Combination {
     }
     return String.format("Stair: %s", joiner.toString());
   }
+
+  public Rank getRank() {
+    return this.pairs[0].getRank();
+  }
+
+  public Card[] getCards() {
+    Card[] cards = new Card[] {};
+
+    for (PairCombination pair : this.pairs) {
+      cards = Arrays.copyOf(cards, cards.length + 2);
+      cards[cards.length - 2] = pair.getCardOne();
+      cards[cards.length - 1] = pair.getCardTwo();
+    }
+
+    return cards;
+  }
 }

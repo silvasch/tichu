@@ -102,4 +102,17 @@ public class StreetCombination extends Combination {
     }
     return String.format("Street: %s", joiner.toString());
   }
+
+  public Rank getRank() {
+    if (this.cards[0] instanceof NormalCard normalCard) {
+      return normalCard.getRank();
+    }
+    // this should never be reached in this version of tichu, because there are only
+    // normal cards.
+    return Rank.ACE;
+  }
+
+  public Card[] getCards() {
+    return this.cards;
+  }
 }
