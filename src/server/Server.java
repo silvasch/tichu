@@ -54,32 +54,99 @@ public class Server {
     this.teamTwo.informOfGameStart(
         this.teamOne.getPlayerOne().getName(), this.teamOne.getPlayerTwo().getName());
 
-    int playerIndex = 0;
+    int startingPlayerIndex = 0;
 
-    Move lastNonPassingMove = null;
-
+    mainloop:
     while (true) {
-      Player currentPlayer = this.getPlayers()[playerIndex];
-      Move move = currentPlayer.getMove(lastNonPassingMove);
+      int playerIndex = startingPlayerIndex;
 
-      for (Player player : this.getPlayers()) { // TODO: do not inform the player that made the move
-        player.informOfMove(move, currentPlayer.getName());
+      Move[] moves = new Move[] {};
+      Move lastNonPassingMove = null;
+
+      int passingMoves = 0;
+
+      int lastPlayedPlayerIndex = playerIndex;
+
+      int playersStillInAtStart = this.countPlayersStillIn();
+
+      roundloop:
+      while (true) {
+        Player currentPlayer = this.getPlayers()[playerIndex];
+
+        if (currentPlayer.isStillIn()) {
+          Move move = currentPlayer.getMove(lastNonPassingMove);
+
+          if (move == null) {
+            passingMoves += 1;
+          } else {
+            moves = Arrays.copyOf(moves, moves.length + 1);
+            moves[moves.length - 1] = move;
+            lastNonPassingMove = move;
+
+            passingMoves = 0;
+
+            lastPlayedPlayerIndex = playerIndex;
+          }
+
+          this.informOtherPlayers(move, playerIndex);
+
+          System.out.println(String.format("passing moves: %d", passingMoves));
+          System.out.println(String.format("player still in at start: %d", playersStillInAtStart));
+
+          if (passingMoves == playersStillInAtStart - 1) {
+            System.out.println(
+                String.format(
+                    "'%s' won this round.", this.getPlayers()[lastPlayedPlayerIndex].getName()));
+
+            break roundloop;
+          }
+        } else {
+          // TODO: inform the player that he is being skipped because he doesn't have any cards left
+        }
+
+        playerIndex += 1;
+        if (playerIndex == 4) {
+          playerIndex = 0;
+        }
       }
 
-      if (move != null) {
-        lastNonPassingMove = move;
-      }
+      // TODO: count points
+      // TODO: inform players who won this round
 
-      playerIndex += 1;
-
-      if (playerIndex == 4) { // TODO: correct gameloop
-        playerIndex = 0;
+      // TODO: maybe special finish round
+      if (this.countPlayersStillIn() == 0) { // game is over
+        break mainloop;
       }
     }
 
-    // TODO: implement this correctly once the game can end
-    // this.teamOne.informOfGameEnd(this.teamTwo.getPoints());
-    // this.teamTwo.informOfGameEnd(this.teamOne.getPoints());
+    this.teamOne.informOfGameEnd(this.teamTwo.getPoints());
+    this.teamTwo.informOfGameEnd(this.teamOne.getPoints());
+  }
+
+  private int countPlayersStillIn() {
+    int sum = 0;
+
+    for (Player player : this.getPlayers()) {
+      if (player.isStillIn()) {
+        sum += 1;
+      }
+    }
+
+    return sum;
+  }
+
+  // inform other players of a move by playerIndex
+  private void informOtherPlayers(Move move, int playerIndex) throws SerializationException {
+    Player[] players = this.getPlayers();
+    String playerName = players[playerIndex].getName();
+
+    for (int i = 0; i < players.length; i++) {
+      if (i == playerIndex) {
+        continue;
+      }
+
+      players[i].informOfMove(move, playerName);
+    }
   }
 
   private Card[][] generateHands() {
@@ -92,6 +159,12 @@ public class Server {
       hands = Arrays.copyOf(hands, hands.length + 1);
       hands[hands.length - 1] = Arrays.copyOfRange(cards, i, Math.min(cards.length, i + chunkSize));
     }
+
+    // TODO: remove when testing os over
+    hands[0] = new Card[] {new NormalCard(Suit.GREEN, Rank.ACE)};
+    hands[1] = new Card[] {new NormalCard(Suit.GREEN, Rank.ACE)};
+    hands[2] = new Card[] {new NormalCard(Suit.GREEN, Rank.ACE)};
+    hands[3] = new Card[] {new NormalCard(Suit.GREEN, Rank.ACE)};
 
     return hands;
   }

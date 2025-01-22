@@ -49,7 +49,7 @@ public class Player {
     this.out.println(joiner);
   }
 
-  public Move getMove(Move firstMove)
+  public Move getMove(Move lastMove)
       throws DeserializationException, IOException, SerializationException {
     this.out.println("get-move");
     StringJoiner joiner = new StringJoiner("|");
@@ -69,7 +69,7 @@ public class Player {
         move = Move.partialDeserializeMove(rawMove).deserialize();
       }
 
-      String rejection = this.verifyMove(firstMove, move);
+      String rejection = this.verifyMove(lastMove, move);
       if (rejection != null) {
         this.out.println(rejection);
         continue;
@@ -145,6 +145,10 @@ public class Player {
     this.out.println("end");
     this.out.println(points);
     this.out.println(opponentPoints);
+  }
+
+  public boolean isStillIn() {
+    return this.cards.length > 0;
   }
 
   public void close() throws IOException {
