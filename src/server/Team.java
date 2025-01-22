@@ -1,24 +1,36 @@
 package src.server;
 
 import java.io.IOException;
-import java.net.Socket;
-import src.card.Card;
+import src.serde.SerializationException;
 
 public class Team {
+
   private Player playerOne;
   private Player playerTwo;
 
   private int points;
 
-  public Team(Socket socketOne, Socket socketTwo, Card[] cardsOne, Card[] cardsTwo)
-      throws IOException {
-    this.playerOne = new Player(socketOne, cardsOne);
-    this.playerTwo = new Player(socketTwo, cardsTwo);
+  public Team(Player playerOne, Player playerTwo) {
+    this.playerOne = playerOne;
+    this.playerTwo = playerTwo;
+
+    this.points = 0;
   }
 
-  public void informOfEnd(boolean won, int enemyPoints) {
-    this.playerOne.informOfEnd(won, this.points, enemyPoints);
-    this.playerTwo.informOfEnd(won, this.points, enemyPoints);
+  public void informOfGameStart(String opponentOneName, String opponentTwoName)
+      throws SerializationException {
+    this.playerOne.informOfGameStart(this.playerTwo.getName(), opponentOneName, opponentTwoName);
+    this.playerTwo.informOfGameStart(this.playerOne.getName(), opponentOneName, opponentTwoName);
+  }
+
+  public void informOfGameEnd(int opponentPoints) {
+    this.playerOne.informOfGameEnd(this.points, opponentPoints);
+    this.playerTwo.informOfGameEnd(this.points, opponentPoints);
+  }
+
+  public void close() throws IOException {
+    this.playerOne.close();
+    this.playerTwo.close();
   }
 
   public Player getPlayerOne() {
@@ -31,5 +43,9 @@ public class Team {
 
   public int getPoints() {
     return this.points;
+  }
+
+  public void addPoints(int points) {
+    this.points += points;
   }
 }
