@@ -75,18 +75,20 @@ public class Client {
         String opponentOneName = this.in.readLine();
         String opponentTwoName = this.in.readLine();
 
-        String rawCards = this.in.readLine();
-        String[] rawCardsParts = rawCards.split("\\|");
-
         Card[] cards = new Card[] {};
 
-        for (String rawCard : rawCardsParts) {
-          Card card = Card.partialDeserializeCard(rawCard).deserialize();
-          cards = Arrays.copyOf(cards, cards.length + 1);
-          cards[cards.length - 1] = card;
-        }
+        String rawCards = this.in.readLine();
+        if (!rawCards.equals("")) {
+          String[] rawCardsParts = rawCards.split("\\|");
 
-        Arrays.sort(cards);
+          for (String rawCard : rawCardsParts) {
+            Card card = Card.partialDeserializeCard(rawCard).deserialize();
+            cards = Arrays.copyOf(cards, cards.length + 1);
+            cards[cards.length - 1] = card;
+          }
+
+          Arrays.sort(cards);
+        }
 
         System.out.println(
             String.format(

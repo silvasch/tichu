@@ -44,4 +44,8 @@ public class Team {
   public int getPoints() {
     return this.points;
   }
+
+  public void addPoints(int points) {
+    this.points += points;
+  }
 }

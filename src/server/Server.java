@@ -10,6 +10,7 @@ import src.card.NormalCard;
 import src.card.Rank;
 import src.card.Suit;
 import src.move.Move;
+import src.move.combination.Combination;
 import src.move.combination.InvalidCombinationException;
 import src.serde.DeserializationException;
 import src.serde.SerializationException;
@@ -60,7 +61,7 @@ public class Server {
     while (true) {
       int playerIndex = startingPlayerIndex;
 
-      Move[] moves = new Move[] {};
+      Move[] playedMoves = new Move[] {};
       Move lastNonPassingMove = null;
 
       int passingMoves = 0;
@@ -79,8 +80,8 @@ public class Server {
           if (move == null) {
             passingMoves += 1;
           } else {
-            moves = Arrays.copyOf(moves, moves.length + 1);
-            moves[moves.length - 1] = move;
+            playedMoves = Arrays.copyOf(playedMoves, playedMoves.length + 1);
+            playedMoves[playedMoves.length - 1] = move;
             lastNonPassingMove = move;
 
             passingMoves = 0;
@@ -90,14 +91,7 @@ public class Server {
 
           this.informOtherPlayers(move, playerIndex);
 
-          System.out.println(String.format("passing moves: %d", passingMoves));
-          System.out.println(String.format("player still in at start: %d", playersStillInAtStart));
-
           if (passingMoves == playersStillInAtStart - 1) {
-            System.out.println(
-                String.format(
-                    "'%s' won this round.", this.getPlayers()[lastPlayedPlayerIndex].getName()));
-
             break roundloop;
           }
         } else {
@@ -110,7 +104,12 @@ public class Server {
         }
       }
 
-      // TODO: count points
+      int playerPoints = this.countPoints(playedMoves);
+      if (lastPlayedPlayerIndex == 0 || lastPlayedPlayerIndex == 1) {
+        this.teamOne.addPoints(playerPoints);
+      } else {
+        this.teamTwo.addPoints(playerPoints);
+      }
 
       for (Player player : this.getPlayers()) {
         player.informOfRoundEnd(this.getPlayers()[lastPlayedPlayerIndex].getName());
@@ -163,12 +162,6 @@ public class Server {
       hands[hands.length - 1] = Arrays.copyOfRange(cards, i, Math.min(cards.length, i + chunkSize));
     }
 
-    // TODO: remove when testing os over
-    hands[0] = new Card[] {new NormalCard(Suit.GREEN, Rank.ACE)};
-    hands[1] = new Card[] {new NormalCard(Suit.GREEN, Rank.ACE)};
-    hands[2] = new Card[] {new NormalCard(Suit.GREEN, Rank.ACE)};
-    hands[3] = new Card[] {new NormalCard(Suit.GREEN, Rank.ACE)};
-
     return hands;
   }
 
@@ -191,6 +184,25 @@ public class Server {
   private Socket acceptConnection() throws IOException {
     Socket socket = this.socket.accept();
     return socket;
+  }
+
+  private int countPoints(Move[] moves) {
+    int points = 0;
+    for (Move move : moves) {
+      if (move instanceof Combination combination) {
+        for (Card card : combination.getCards()) {
+          if (card instanceof NormalCard normalCard) {
+            if (normalCard.getRank().equals(Rank.FIVE)) {
+              points += 5;
+            } else if (normalCard.getRank().equals(Rank.TEN)
+                || normalCard.getRank().equals(Rank.KING)) {
+              points += 10;
+            }
+          }
+        }
+      }
+    }
+    return points;
   }
 
   private void close() throws IOException {
