@@ -130,6 +130,10 @@ public class Player {
     return null;
   }
 
+  public void informOfSkip() {
+    this.out.println("skip");
+  }
+
   public void informOfMove(Move move, String player) throws SerializationException {
     String serializedMove = "null";
     if (move != null) {

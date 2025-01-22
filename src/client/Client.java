@@ -42,6 +42,9 @@ public class Client {
     while (true) {
       String message = this.in.readLine();
       switch (message) {
+        case "skip":
+          System.out.println("You were skipped because you have no cards left.");
+          break;
         case "get-move":
           this.getMove();
           break;

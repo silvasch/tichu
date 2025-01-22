@@ -101,7 +101,7 @@ public class Server {
             break roundloop;
           }
         } else {
-          // TODO: inform the player that he is being skipped because he doesn't have any cards left
+          currentPlayer.informOfSkip();
         }
 
         playerIndex += 1;
