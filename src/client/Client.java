@@ -42,6 +42,11 @@ public class Client {
     while (true) {
       String message = this.in.readLine();
       switch (message) {
+        case "round-end":
+          String playerName = this.in.readLine();
+          System.out.println("Player '" + playerName + "' won the round.");
+          System.out.println();
+          break;
         case "skip":
           System.out.println("You were skipped because you have no cards left.");
           break;
@@ -114,6 +119,8 @@ public class Client {
     }
 
     Arrays.sort(cards);
+
+    System.out.println("It's your turn:");
 
     System.out.println("These are your cards:");
     for (int i = 0; i < cards.length; i++) {

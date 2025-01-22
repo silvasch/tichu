@@ -111,7 +111,10 @@ public class Server {
       }
 
       // TODO: count points
-      // TODO: inform players who won this round
+
+      for (Player player : this.getPlayers()) {
+        player.informOfRoundEnd(this.getPlayers()[lastPlayedPlayerIndex].getName());
+      }
 
       // TODO: maybe special finish round
       if (this.countPlayersStillIn() == 0) { // game is over

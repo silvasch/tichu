@@ -130,6 +130,11 @@ public class Player {
     return null;
   }
 
+  public void informOfRoundEnd(String playerName) {
+    this.out.println("round-end");
+    this.out.println(playerName);
+  }
+
   public void informOfSkip() {
     this.out.println("skip");
   }
