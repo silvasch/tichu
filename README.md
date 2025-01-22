@@ -9,3 +9,17 @@ The possibility of online multiplayer makes this implementation of [Tichu](https
 This project uses [just](https://just.systems/) as a build system.
 Use `just run-server <PORT>` to start the server, and
 `just run-client <IP> <PORT>` to connect a client.
+
+If you don't want to use just, you can use the following commands:
+
+```bash
+# For running the server
+mkdir -p out
+javac -d out src/server/Server.java
+java -cp out src.server.Server <PORT>
+
+# For running the client
+mkdir -p out
+javac -d out src/client/Client.java
+java -cp out src.client.Client <IP> <PORT>
+```
