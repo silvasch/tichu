@@ -48,7 +48,8 @@ public class Player {
     this.out.println(joiner);
   }
 
-  public Move getMove() throws DeserializationException, IOException, SerializationException {
+  public Move getMove(Move firstMove)
+      throws DeserializationException, IOException, SerializationException {
     this.out.println("get-move");
     StringJoiner joiner = new StringJoiner("|");
     for (Card card : this.cards) {
@@ -63,12 +64,15 @@ public class Player {
 
       if (rawMove.equals("null")) {
         move = null;
-        break;
+      } else {
+        move = Move.partialDeserializeMove(rawMove).deserialize();
       }
 
-      move = Move.partialDeserializeMove(rawMove).deserialize();
-
-      // TODO: verify that the move can be played
+      String rejection = this.verifyMove(firstMove, move);
+      if (rejection != null) {
+        this.out.println(rejection);
+        continue;
+      }
 
       // remove the played cards from the hand
       if (move != null && move instanceof Combination combination) {
@@ -90,6 +94,29 @@ public class Player {
     this.out.println("ok");
 
     return move;
+  }
+
+  // return null if ok, else return a reason why not
+  private String verifyMove(Move firstMove, Move move) {
+    // there is no firstMove -> move is the first one
+    if (firstMove == null) {
+      if (move == null) {
+        return "You cannot pass as the first player!";
+      }
+      return null;
+    }
+
+    if (move == null) {
+      return null;
+    }
+
+    if (firstMove.getClass() != move.getClass()) {
+      return String.format("You have to play the same kind of combination as the first move.");
+    }
+
+    // TODO: verify that the combination is of higher value
+
+    return null;
   }
 
   public void informOfMove(Move move, String player) throws SerializationException {
