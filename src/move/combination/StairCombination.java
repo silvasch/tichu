@@ -106,6 +106,10 @@ public class StairCombination extends Combination {
     return String.format("Stair: %s", joiner.toString());
   }
 
+  public Rank getRank() {
+    return this.pairs[0].getRank();
+  }
+
   public Card[] getCards() {
     Card[] cards = new Card[] {};
 

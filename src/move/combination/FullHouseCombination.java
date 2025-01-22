@@ -1,6 +1,7 @@
 package src.move.combination;
 
 import src.card.Card;
+import src.card.Rank;
 import src.serde.DeserializationException;
 import src.serde.PartialDeserialization;
 import src.serde.SerializationException;
@@ -65,6 +66,10 @@ public class FullHouseCombination extends Combination implements Comparable<Full
 
   public PairCombination getPair() {
     return this.pair;
+  }
+
+  public Rank getRank() {
+    return this.triple.getRank();
   }
 
   public Card[] getCards() {

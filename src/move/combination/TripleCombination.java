@@ -104,6 +104,15 @@ public class TripleCombination extends Combination implements Comparable<TripleC
     return this.cardThree;
   }
 
+  public Rank getRank() {
+    if (this.cardOne instanceof NormalCard normalCardOne) {
+      return normalCardOne.getRank();
+    }
+    // this should never be reached in this version of tichu, because there are only
+    // normal cards.
+    return Rank.ACE;
+  }
+
   public Card[] getCards() {
     return new Card[] {
       this.cardOne, this.cardTwo, this.cardThree,

@@ -8,6 +8,7 @@ import java.net.Socket;
 import java.util.Arrays;
 import java.util.StringJoiner;
 import src.card.Card;
+import src.card.Rank;
 import src.move.Move;
 import src.move.combination.Combination;
 import src.serde.DeserializationException;
@@ -97,9 +98,9 @@ public class Player {
   }
 
   // return null if ok, else return a reason why not
-  private String verifyMove(Move firstMove, Move move) {
+  private String verifyMove(Move lastMove, Move move) {
     // there is no firstMove -> move is the first one
-    if (firstMove == null) {
+    if (lastMove == null) {
       if (move == null) {
         return "You cannot pass as the first player!";
       }
@@ -110,11 +111,19 @@ public class Player {
       return null;
     }
 
-    if (firstMove.getClass() != move.getClass()) {
-      return String.format("You have to play the same kind of combination as the first move.");
+    if (lastMove.getClass() != move.getClass()) {
+      return String.format("You have to play the same kind of combination as the last move.");
     }
 
-    // TODO: verify that the combination is of higher value
+    if (lastMove instanceof Combination lastCombinatioin
+        && move instanceof Combination combination) {
+      Rank lastRank = lastCombinatioin.getRank();
+      Rank rank = combination.getRank();
+
+      if (rank.compareTo(lastRank) <= 0) {
+        return "You have to play a combination of higher value.";
+      }
+    }
 
     return null;
   }

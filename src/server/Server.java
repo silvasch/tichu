@@ -56,18 +56,18 @@ public class Server {
 
     int playerIndex = 0;
 
-    Move firstMove = null;
+    Move lastNonPassingMove = null;
 
     while (true) {
       Player currentPlayer = this.getPlayers()[playerIndex];
-      Move move = currentPlayer.getMove(firstMove);
+      Move move = currentPlayer.getMove(lastNonPassingMove);
 
       for (Player player : this.getPlayers()) { // TODO: do not inform the player that made the move
         player.informOfMove(move, currentPlayer.getName());
       }
 
-      if (playerIndex == 0) {
-        firstMove = move;
+      if (move != null) {
+        lastNonPassingMove = move;
       }
 
       playerIndex += 1;

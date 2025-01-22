@@ -1,6 +1,8 @@
 package src.move.combination;
 
 import src.card.Card;
+import src.card.NormalCard;
+import src.card.Rank;
 import src.serde.DeserializationException;
 import src.serde.PartialDeserialization;
 import src.serde.SerializationException;
@@ -49,6 +51,15 @@ public class SingleCombination extends Combination implements Comparable<SingleC
 
   public Card getCard() {
     return this.card;
+  }
+
+  public Rank getRank() {
+    if (this.card instanceof NormalCard normalCard) {
+      return normalCard.getRank();
+    }
+    // this should never be reached in this version of tichu, because there are only
+    // normal cards.
+    return Rank.ACE;
   }
 
   public Card[] getCards() {

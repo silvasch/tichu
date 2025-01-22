@@ -2,6 +2,7 @@ package src.move.combination;
 
 import src.card.Card;
 import src.card.NormalCard;
+import src.card.Rank;
 import src.serde.DeserializationException;
 import src.serde.PartialDeserialization;
 import src.serde.SerializationException;
@@ -87,6 +88,15 @@ public class PairCombination extends Combination implements Comparable<PairCombi
 
   public Card getCardTwo() {
     return this.cardTwo;
+  }
+
+  public Rank getRank() {
+    if (this.cardOne instanceof NormalCard normalCardOne) {
+      return normalCardOne.getRank();
+    }
+    // this should never be reached in this version of tichu, because there are only
+    // normal cards.
+    return Rank.ACE;
   }
 
   public Card[] getCards() {
